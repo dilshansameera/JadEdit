@@ -68,25 +68,40 @@
 	// =========================================
 
 	function TranslateJade() {
-		var editor = document.getElementById('vibrante-editor');
-		var editorSource = "";
+		var source = document.getElementById('vibrante-editor').value;
+		var result = "";
 
-		var lines = editor.value.split('\n');
-		for (var line in lines) {
-			var currentLine = lines[line].trim();
-			var space = currentLine.indexOf(' ');
+		var lines = source.split('\n');
+		for (var i = 0; i < lines.length; i++) {
+			var currentBlock = "";
+			var currentLine = lines[i].trim();
+			var firstSpace = currentLine.indexOf(' ');
+			var element = currentLine.substring(0, firstSpace);
+			currentBlock += currentLine.substring(firstSpace, currentLine.length).trim();
 
-			if (currentLine[0] == '\t') {
+			var nextIndex = i;
+			while (++nextIndex < lines.length && lines[nextIndex].indexOf('\t') == 0 ) {
 
+				var nextLine = lines[nextIndex].trim();
+				var nextFirstSpace = nextLine.indexOf(' ');
+				var childElement = nextLine.substring(0, nextFirstSpace);
+				currentBlock +=
+					("<" + childElement + ">"
+						+ nextLine.substring(nextFirstSpace, nextLine.length).trim()
+						+ "</" + childElement + ">");
+
+				i++;
 			}
 
-			var element = currentLine.substring(0, space);
-			var newLine = "<" + element + ">" + currentLine.substring(space, currentLine.length).trim() + "</" + element + ">";
+			var newLine =
+				("<" + element + ">"
+					+ currentBlock
+					+ "</" + element + ">");
 
-			editorSource += newLine;
+			result += newLine;
 		}
 
-		return editorSource;
+		return result;
 	}
 
 	// Prepares the editor interface on page load
