@@ -1,4 +1,4 @@
-/* VibrantE - Jade Editor
+/* jadedit - Jade Editor
  * =================================================== */
 
 (function () {
@@ -7,14 +7,14 @@
 	// =======================
 
 	function getEditorTemplate() {
-		return "<div id='vibrante-container'>" +
-			"<div id='vibrante-button-controls'>" +
-			"<div id='vibrante-editor-button' class='chosen'>Editor</div>" +
-			"<div id='vibrante-preview-button'>Preview</div>" +
+		return "<div id='jadedit-container'>" +
+			"<div id='jadedit-button-controls'>" +
+			"<div id='jadedit-editor-button' class='chosen'>Editor</div>" +
+			"<div id='jadedit-preview-button'>Preview</div>" +
 			"</div>" +
-			"<div id='vibrante-editor-container'>" +
-			"<textarea id='vibrante-editor'></textarea>" +
-			"<div id='vibrante-preview' style='display: none;'></div>" +
+			"<div id='jadedit-editor-container'>" +
+			"<textarea id='jadedit-editor'></textarea>" +
+			"<div id='jadedit-preview' style='display: none;'></div>" +
 			"</div>" +
 			"</div>";
 	}
@@ -23,10 +23,10 @@
 	// ========================================
 
 	function registerEditorEvents() {
-		var editorButton = document.getElementById('vibrante-editor-button');
-		var previewButton = document.getElementById('vibrante-preview-button');
-		var editor = document.getElementById('vibrante-editor');
-		var preview = document.getElementById('vibrante-preview');
+		var editorButton = document.getElementById('jadedit-editor-button');
+		var previewButton = document.getElementById('jadedit-preview-button');
+		var editor = document.getElementById('jadedit-editor');
+		var preview = document.getElementById('jadedit-preview');
 
 		enableTab(editor);
 
@@ -68,10 +68,12 @@
 	// =========================================
 
 	function TranslateJade() {
-		var source = document.getElementById('vibrante-editor').value;
+		var source = document.getElementById('jadedit-editor').value;
 		var result = "";
 
 		var lines = source.split('\n');
+
+		// Going thru each lines
 		for (var i = 0; i < lines.length; i++) {
 			var currentBlock = "";
 			var currentLine = lines[i].trim();
@@ -108,7 +110,7 @@
 	// ==========================================
 
 	(function load() {
-		var container = document.getElementById('vibrante');
+		var container = document.getElementById('jadedit');
 
 		if (container == null) {
 			alert('Editor placeholder not found!');

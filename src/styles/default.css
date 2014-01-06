@@ -1,30 +1,30 @@
-#vibrante-container {
+#jadedit-container {
 
 }
 
-	#vibrante-container #vibrante-button-controls {
+	#jadedit-container #jadedit-button-controls {
 
 	}
 
-		#vibrante-container #vibrante-button-controls div {
+		#jadedit-container #jadedit-button-controls div {
 			display: inline-block;
 			padding: 5px;
 		}
 
-		#vibrante-container #vibrante-button-controls div:hover {
+		#jadedit-container #jadedit-button-controls div:hover {
 			cursor: pointer;
 		}
 
-		#vibrante-container #vibrante-button-controls .chosen {
+		#jadedit-container #jadedit-button-controls .chosen {
 			background-color: black;
 			color: white;
 		}
 
-	#vibrante-container #vibrante-editor-container {
+	#jadedit-container #jadedit-editor-container {
 
 	}
 
-		#vibrante-container #vibrante-editor-container #vibrante-editor {
+		#jadedit-container #jadedit-editor-container #jadedit-editor {
 			background-color: black;
 			color: white;
 			padding: 10px;
@@ -36,7 +36,7 @@
 			resize: none;
 		}
 
-		#vibrante-container #vibrante-editor-container #vibrante-preview {
+		#jadedit-container #jadedit-editor-container #jadedit-preview {
 			padding: 10px;
 
 		}
