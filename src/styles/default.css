@@ -1,0 +1,41 @@
+#vibrante-container {
+
+}
+
+	#vibrante-container #vibrante-button-controls {
+
+	}
+
+		#vibrante-container #vibrante-button-controls div {
+			display: inline-block;
+			padding: 5px;
+		}
+
+		#vibrante-container #vibrante-button-controls div:hover {
+			cursor: pointer;
+		}
+
+		#vibrante-container #vibrante-button-controls .chosen {
+			background-color: black;
+			color: white;
+		}
+
+	#vibrante-container #vibrante-editor-container {
+
+	}
+
+		#vibrante-container #vibrante-editor-container #vibrante-editor {
+			background-color: black;
+			color: white;
+			padding: 10px;
+			width: 100%;
+			-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+			-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+			box-sizing: border-box;         /* Opera/IE 8+ */
+			resize: none;
+		}
+
+		#vibrante-container #vibrante-editor-container #vibrante-preview {
+			padding: 10px;
+
+		}
