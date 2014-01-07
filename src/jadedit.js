@@ -74,7 +74,11 @@
 		var lines = source.split('\n');
 
 		for (var i = 0; i < lines.length; i++) {
-			var currentResult =  processLine(i, lines);
+			if (lines[i].trim().length < 1) {
+				continue;
+			}
+
+			var currentResult = processLine(i, lines);
 			result += currentResult.processedLine;
 			i = currentResult.newLocation;
 		}
@@ -85,51 +89,38 @@
 	// Recursive line translator
 	// =========================
 
-	function processLine(currentLocation, allLines)
-	{
-		var currentLineContents = allLines[currentLocation].trim();
+	function processLine(currentLocation, allLines) {
+		var currentLineContents = allLines[currentLocation];
 		var currentInnerContents = "";
 
 		var firstSpace = currentLineContents.indexOf(' ');
 		var currentElement = "";
 
-		// If a space is not found, currentLine maybe representing a tag
+		var currentTabCount = tabCounter(currentLineContents);
+		currentLineContents = currentLineContents.trim();
+
 		if (firstSpace == -1) {
-			currentElement = currentLineContents;
-		} else {
-			currentElement = currentLineContents.substring(0, firstSpace);
-			currentInnerContents +=
-				currentLineContents.substring(firstSpace, currentLineContents.length).trim();
+			firstSpace = currentLineContents.length;
+		}
+
+		currentElement = currentLineContents.substring(0, firstSpace);
+		currentInnerContents +=
+			currentLineContents.substring(firstSpace, currentLineContents.length).trim();
+
+		// If next line starts with 1 more tab characters than the current line
+		while (currentLocation + 1 < allLines.length
+			&& (currentTabCount + 1) == tabCounter(allLines[currentLocation + 1])) {
+			currentLocation++;
+
+			var recursionResult = processLine(currentLocation, allLines);
+			currentInnerContents += recursionResult.processedLine;
+			currentLocation = recursionResult.newLocation;
 		}
 
 		return {
 			'processedLine': createTag(currentElement, currentInnerContents),
 			'newLocation': currentLocation
 		};
-
-//			// Skipping empty lines
-//			if (currentLine.length <= 1) {
-//				continue;
-//			}
-//
-//			var nextIndex = i;
-//			while (++nextIndex < lines.length && lines[nextIndex].indexOf('\t') == 0) {
-//
-//				var nextLine = lines[nextIndex].trim();
-//				var nextFirstSpace = nextLine.indexOf(' ');
-//				var childElement = nextLine.substring(0, nextFirstSpace);
-//
-//				if (childElement != null) {
-//					currentBlock +=
-//						createTag(childElement, nextLine.substring(nextFirstSpace, nextLine.length).trim());
-//				} else {
-//					currentBlock += nextLine.substring(nextFirstSpace, nextLine.length).trim();
-//				}
-//
-//				i++;
-//			}
-//
-//			result += createTag(element, currentBlock);
 	}
 
 	// Forms an html tag
@@ -137,6 +128,17 @@
 
 	function createTag(element, innerContents) {
 		return "<" + element + ">" + innerContents + "</" + element + ">"
+	}
+
+	// Returns number of consecutive tabs found in the beginning for a string
+	// ======================================================================
+
+	function tabCounter(str) {
+		for (var tabCount = 0; tabCount < str.length; tabCount++) {
+			if (str[tabCount] != '\t') {
+				return tabCount;
+			}
+		}
 	}
 
 	// Prepares the editor interface on page load
