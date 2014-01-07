@@ -1,5 +1,5 @@
-/* jadedit - Jade Editor
- * =================================================== */
+/* JadEdit - Editor using JADE template syntax
+ * =========================================== */
 
 (function () {
 
@@ -43,7 +43,7 @@
 			previewButton.className = "chosen";
 			editorButton.className = "";
 
-			preview.innerHTML = TranslateJade();
+			preview.innerHTML = translateJade();
 		}
 	}
 
@@ -51,7 +51,7 @@
 	// =============================
 
 	function enableTab(editor) {
-		editor.onkeydown = function(e) {
+		editor.onkeydown = function (e) {
 			if (e.keyCode === 9) {
 				var val = this.value,
 					start = this.selectionStart,
@@ -64,46 +64,79 @@
 		};
 	}
 
-	// Converts texts in editor to HTML elements
-	// =========================================
+	// Converts jade texts in the editor to HTML elements
+	// ==================================================
 
-	function TranslateJade() {
+	function translateJade() {
 		var source = document.getElementById('jadedit-editor').value;
 		var result = "";
 
 		var lines = source.split('\n');
 
-		// Going thru each lines
 		for (var i = 0; i < lines.length; i++) {
-			var currentBlock = "";
-			var currentLine = lines[i].trim();
-			var firstSpace = currentLine.indexOf(' ');
-			var element = currentLine.substring(0, firstSpace);
-			currentBlock += currentLine.substring(firstSpace, currentLine.length).trim();
-
-			var nextIndex = i;
-			while (++nextIndex < lines.length && lines[nextIndex].indexOf('\t') == 0 ) {
-
-				var nextLine = lines[nextIndex].trim();
-				var nextFirstSpace = nextLine.indexOf(' ');
-				var childElement = nextLine.substring(0, nextFirstSpace);
-				currentBlock +=
-					("<" + childElement + ">"
-						+ nextLine.substring(nextFirstSpace, nextLine.length).trim()
-						+ "</" + childElement + ">");
-
-				i++;
-			}
-
-			var newLine =
-				("<" + element + ">"
-					+ currentBlock
-					+ "</" + element + ">");
-
-			result += newLine;
+			var currentResult =  processLine(i, lines);
+			result += currentResult.processedLine;
+			i = currentResult.newLocation;
 		}
 
 		return result;
+	}
+
+	// Recursive line translator
+	// =========================
+
+	function processLine(currentLocation, allLines)
+	{
+		var currentLineContents = allLines[currentLocation].trim();
+		var currentInnerContents = "";
+
+		var firstSpace = currentLineContents.indexOf(' ');
+		var currentElement = "";
+
+		// If a space is not found, currentLine maybe representing a tag
+		if (firstSpace == -1) {
+			currentElement = currentLineContents;
+		} else {
+			currentElement = currentLineContents.substring(0, firstSpace);
+			currentInnerContents +=
+				currentLineContents.substring(firstSpace, currentLineContents.length).trim();
+		}
+
+		return {
+			'processedLine': createTag(currentElement, currentInnerContents),
+			'newLocation': currentLocation
+		};
+
+//			// Skipping empty lines
+//			if (currentLine.length <= 1) {
+//				continue;
+//			}
+//
+//			var nextIndex = i;
+//			while (++nextIndex < lines.length && lines[nextIndex].indexOf('\t') == 0) {
+//
+//				var nextLine = lines[nextIndex].trim();
+//				var nextFirstSpace = nextLine.indexOf(' ');
+//				var childElement = nextLine.substring(0, nextFirstSpace);
+//
+//				if (childElement != null) {
+//					currentBlock +=
+//						createTag(childElement, nextLine.substring(nextFirstSpace, nextLine.length).trim());
+//				} else {
+//					currentBlock += nextLine.substring(nextFirstSpace, nextLine.length).trim();
+//				}
+//
+//				i++;
+//			}
+//
+//			result += createTag(element, currentBlock);
+	}
+
+	// Forms an html tag
+	// =================
+
+	function createTag(element, innerContents) {
+		return "<" + element + ">" + innerContents + "</" + element + ">"
 	}
 
 	// Prepares the editor interface on page load

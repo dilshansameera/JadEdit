@@ -25,6 +25,7 @@
 	}
 
 		#jadedit-container #jadedit-editor-container #jadedit-editor {
+			font-size: 1em;
 			background-color: black;
 			color: white;
 			padding: 10px;
