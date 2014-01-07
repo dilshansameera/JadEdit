@@ -6,10 +6,7 @@
 	// Returns editor template
 	// =======================
 
-	function getEditorTemplate() {
-		var container = document.getElementById('jadedit');
-		var inputName = container.getAttribute("name");
-
+	function getEditorTemplate(inputName) {
 		return "<div id='jadedit-container'>" +
 			"<div id='jadedit-button-controls'>" +
 			"<div id='jadedit-editor-button' class='chosen'>Editor</div>" +
@@ -204,13 +201,19 @@
 
 	(function load() {
 		var container = document.getElementById('jadedit');
+		var inputName = container.getAttribute("name");
 
 		if (container == null) {
 			alert('Editor placeholder not found!');
 			return;
 		}
 
-		container.innerHTML = getEditorTemplate();
+		if (inputName == null) {
+			alert('No name attribute found. Form submit will not work!');
+			return;
+		}
+
+		container.innerHTML = getEditorTemplate(inputName);
 		registerEditorEvents();
 	})();
 })();
