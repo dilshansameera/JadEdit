@@ -99,15 +99,13 @@
 		var currentTabCount = tabCounter(currentLineContents);
 		currentLineContents = currentLineContents.trim();
 
-		if (firstSpace == -1) {
-			firstSpace = currentLineContents.length;
-		}
+		if (firstSpace == -1) firstSpace = currentLineContents.length;
 
 		currentElement = currentLineContents.substring(0, firstSpace);
 		currentInnerContents +=
 			currentLineContents.substring(firstSpace, currentLineContents.length).trim();
 
-		// If next line starts with 1 more tab characters than the current line
+		// handling child elements
 		while (currentLocation + 1 < allLines.length
 			&& (currentTabCount + 1) == tabCounter(allLines[currentLocation + 1])) {
 			currentLocation++;
@@ -127,7 +125,11 @@
 	// =================
 
 	function createTag(element, innerContents) {
-		return "<" + element + ">" + innerContents + "</" + element + ">"
+		var processedElement = processTagAttributes(element)
+
+		return "<" + processedElement.withAttribute  + ">" +
+			innerContents +
+			"</" + processedElement.withoutAttribute + ">"
 	}
 
 	// Returns number of consecutive tabs found in the beginning for a string
@@ -138,6 +140,55 @@
 			if (str[tabCount] != '\t') {
 				return tabCount;
 			}
+		}
+	}
+
+	// Process attributes included in element for html tags
+	// ====================================================
+
+	function processTagAttributes(element) {
+		var elementWithAttribute = "";
+		var elementWithoutAttribute = "";
+
+		//TODO: Refactor
+		for (var i = 0; i < element.length; i++) {
+			if (element[i] == '.') {
+				elementWithAttribute += " class='";
+				i++;
+				while (element[i] != '.' && element[i] != '#' && i < element.length) {
+					elementWithAttribute += element[i];
+					i++;
+				}
+
+				if (element[i] == '.' || element[i] == '#') {
+					i--;
+				}
+
+				elementWithAttribute += "'";
+			} else if (element[i] == '#') {
+				elementWithAttribute += " id='";
+				i++;
+				while (element[i] != '.' && element[i] != '#' && i < element.length) {
+					elementWithAttribute += element[i];
+					i++;
+				}
+
+				if (element[i] == '.' || element[i] == '#') {
+					i--;
+				}
+
+				elementWithAttribute += "'";
+			}
+			else {
+				elementWithAttribute += element[i];
+				elementWithoutAttribute += element[i];
+			}
+
+		}
+
+		return {
+			'withAttribute': elementWithAttribute,
+			'withoutAttribute': elementWithoutAttribute
 		}
 	}
 
