@@ -7,6 +7,9 @@
 	// =======================
 
 	function getEditorTemplate() {
+		var container = document.getElementById('jadedit');
+		var inputName = container.getAttribute("name");
+
 		return "<div id='jadedit-container'>" +
 			"<div id='jadedit-button-controls'>" +
 			"<div id='jadedit-editor-button' class='chosen'>Editor</div>" +
@@ -15,8 +18,9 @@
 			"<div id='jadedit-editor-container'>" +
 			"<textarea id='jadedit-editor'></textarea>" +
 			"<div id='jadedit-preview' style='display: none;'></div>" +
-			"</div>" +
-			"</div>";
+			"<input type='hidden' id='jadedit-hidden' name='" + inputName + "' />"
+		"</div>" +
+		"</div>";
 	}
 
 	// Registers events for the editor template
@@ -27,6 +31,7 @@
 		var previewButton = document.getElementById('jadedit-preview-button');
 		var editor = document.getElementById('jadedit-editor');
 		var preview = document.getElementById('jadedit-preview');
+		var hidden = document.getElementById('jadedit-hidden');
 
 		enableTab(editor);
 
@@ -44,6 +49,10 @@
 			editorButton.className = "";
 
 			preview.innerHTML = translateJade();
+		}
+
+		editor.onkeyup = function () {
+			hidden.value = translateJade();
 		}
 	}
 
@@ -125,7 +134,7 @@
 	function createTag(element, innerContents) {
 		var processedElement = processTagAttributes(element.trim())
 
-		return "<" + processedElement.withAttribute  + ">" +
+		return "<" + processedElement.withAttribute + ">" +
 			innerContents +
 			"</" + processedElement.withoutAttribute + ">"
 	}
