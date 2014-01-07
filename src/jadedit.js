@@ -93,15 +93,13 @@
 		var currentLineContents = allLines[currentLocation];
 		var currentInnerContents = "";
 
-		var firstSpace = currentLineContents.indexOf(' ');
-		var currentElement = "";
-
 		var currentTabCount = tabCounter(currentLineContents);
 		currentLineContents = currentLineContents.trim();
 
+		var firstSpace = currentLineContents.indexOf(' ');
 		if (firstSpace == -1) firstSpace = currentLineContents.length;
 
-		currentElement = currentLineContents.substring(0, firstSpace);
+		var currentElement = currentLineContents.substring(0, firstSpace);
 		currentInnerContents +=
 			currentLineContents.substring(firstSpace, currentLineContents.length).trim();
 
@@ -125,7 +123,7 @@
 	// =================
 
 	function createTag(element, innerContents) {
-		var processedElement = processTagAttributes(element)
+		var processedElement = processTagAttributes(element.trim())
 
 		return "<" + processedElement.withAttribute  + ">" +
 			innerContents +
