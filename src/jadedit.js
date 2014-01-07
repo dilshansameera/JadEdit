@@ -15,9 +15,9 @@
 			"<div id='jadedit-editor-container'>" +
 			"<textarea id='jadedit-editor'></textarea>" +
 			"<div id='jadedit-preview' style='display: none;'></div>" +
-			"<input type='hidden' id='jadedit-hidden' name='" + inputName + "' />"
-		"</div>" +
-		"</div>";
+			"<input type='hidden' id='jadedit-hidden' name='" + inputName + "' />" +
+			"</div>" +
+			"</div>";
 	}
 
 	// Registers events for the editor template
@@ -102,6 +102,8 @@
 		var currentTabCount = tabCounter(currentLineContents);
 		currentLineContents = currentLineContents.trim();
 
+		var isContinuedLine = currentLineContents[0] == '|';
+
 		var firstSpace = currentLineContents.indexOf(' ');
 		if (firstSpace == -1) firstSpace = currentLineContents.length;
 
@@ -120,7 +122,7 @@
 		}
 
 		return {
-			'processedLine': createTag(currentElement, currentInnerContents),
+			'processedLine': createTag(currentElement, currentInnerContents, isContinuedLine),
 			'newLocation': currentLocation
 		};
 	}
@@ -128,12 +130,23 @@
 	// Forms an html tag
 	// =================
 
-	function createTag(element, innerContents) {
+	function createTag(element, innerContents, isContinuedLine) {
 		var processedElement = processTagAttributes(element.trim())
 
-		return "<" + processedElement.withAttribute + ">" +
-			innerContents +
-			"</" + processedElement.withoutAttribute + ">"
+		if (!processedElement.withoutAttribute === 'br') {
+			if (!isContinuedLine)
+				return "<" + processedElement.withAttribute + ">" +
+					innerContents +
+					"</" + processedElement.withoutAttribute + ">";
+			else
+				return innerContents;
+		}
+
+		if (!isContinuedLine)
+			return "<" + processedElement.withAttribute + "/>" +
+				innerContents;
+		else
+			return innerContents;
 	}
 
 	// Returns number of consecutive tabs found in the beginning for a string
