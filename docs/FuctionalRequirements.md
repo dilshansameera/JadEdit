@@ -25,6 +25,8 @@ Functional Requirements
   - As the app, I want to let the user know that they have not specified name.
   - As the app, I want to syntax highlight the Jade source the user is typing.
   - As a user, I want to be able to edit in full screen mode.
+  - As a user, I want to have different theme options.
+  - As a designer, I want to create themes.
 
 #### Preview
 
