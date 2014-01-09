@@ -1,10 +1,13 @@
 JadEdit
 =======
 
-#### Functional Document
+#### Functional Requirements
 
-The first version of the functional requirement is up. Check it out to see where we are trying to go with this:
 https://github.com/WonSong/JadEdit/blob/master/docs/FuctionalRequirements.md
+
+#### Design Document
+
+https://github.com/WonSong/JadEdit/blob/master/docs/DesignDocument.md
 
 
 #### Website
