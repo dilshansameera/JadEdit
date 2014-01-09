@@ -66,6 +66,14 @@
 				this.value = val.substring(0, start) + '\t' + val.substring(end);
 				this.selectionStart = this.selectionEnd = start + 1;
 				return false;
+			} else if (e.keycode === 9) {
+				var val = this.value,
+					start = this.selectionStart,
+					end = this.selectionEnd;
+
+				this.value = val.substring(0, start) + '\n' + val.substring(end);
+				this.selectionStart = this.selectionEnd = start + 1;
+				return false;
 			}
 		};
 	}
@@ -133,7 +141,7 @@
 	function createTag(element, innerContents, isContinuedLine) {
 		var processedElement = processTagAttributes(element.trim())
 
-		if (!processedElement.withoutAttribute === 'br') {
+		if (processedElement.withoutAttribute !== 'br') {
 			if (!isContinuedLine)
 				return "<" + processedElement.withAttribute + ">" +
 					innerContents +
