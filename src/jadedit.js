@@ -4,7 +4,7 @@
 // The staring point of the applications. Initializes the components
 // =================================================================
 
-(function Main(EDITOR, EVENTS, KEYSTROKE_HANDLER) {
+(function Main(EDITOR, EVENTS, KEYSTROKE_HANDLER, PROCESSOR) {
 	var editorContainer = document.getElementById('jadedit');
 	if (editorContainer.length) {
 		document.write('Editor Container is not found.');
@@ -28,6 +28,8 @@
 
 	EVENTS.registerEditorEvents(editorElements);
 	KEYSTROKE_HANDLER.enableTab(editorElements.editor);
-	KEYSTROKE_HANDLER.enablePreview(editorElements.editor, editorElements.hidden, 'jade');
 
-}(EDITOR, EVENTS, KEYSTROKE_HANDLER));
+	PROCESSOR.setCurrentProcessor('jade');
+	KEYSTROKE_HANDLER.enablePreview(editorElements);
+
+}(EDITOR, EVENTS, KEYSTROKE_HANDLER, PROCESSOR));

@@ -20,8 +20,6 @@ var EVENTS = (function() {
 			editorElements.editor.style.display = 'none';
 			editorElements.previewButton.className = "chosen";
 			editorElements.editorButton.className = "";
-
-			// preview.innerHTML = translateJade();
 		}
 	}
 

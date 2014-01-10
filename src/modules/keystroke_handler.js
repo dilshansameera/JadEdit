@@ -24,11 +24,13 @@ var KEYSTROKE_HANDLER = (function (PROCESSOR) {
 
 	// Sets the type of process to use on key up event in the editor
 	// ============================================================
-	//TODO: Should we move this to the process.js file?
 
-	keystrokeHandler.enablePreview = function(editor, hidden, processorType) {
-		editor.onkeyup = function () {
-			hidden.value = PROCESSOR.process(processorType);
+	keystrokeHandler.enablePreview = function(editorElements) {
+		editorElements.editor.onkeyup = function () {
+			var result = PROCESSOR.process(editorElements.editor.value);
+
+			editorElements.hidden.value = result;
+			editorElements.preview.innerHTML = result;
 		}
 	}
 
