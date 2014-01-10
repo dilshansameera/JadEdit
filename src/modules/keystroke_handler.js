@@ -29,6 +29,7 @@ var KEYSTROKE_HANDLER = (function (PROCESSOR) {
 		editorElements.editor.onkeyup = function () {
 			var result = PROCESSOR.process(editorElements.editor.value);
 
+			editorElements.source.innerText = result;
 			editorElements.hidden.value = result;
 			editorElements.preview.innerHTML = result;
 		}

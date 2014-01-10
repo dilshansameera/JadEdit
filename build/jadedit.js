@@ -11,10 +11,12 @@ var EDITOR = (function () {
 		return "<div id='jadedit-container'>" +
 			"<div id='jadedit-button-controls'>" +
 				"<div id='jadedit-editor-button' class='chosen'>Editor</div>" +
+				"<div id='jadedit-source-button'>Source</div>" +
 				"<div id='jadedit-preview-button'>Preview</div>" +
 			"</div>" +
 			"<div id='jadedit-editor-container'>" +
 				"<textarea id='jadedit-editor' spellcheck='false'></textarea>" +
+				"<div id='jadedit-source' style='display: none;'></div>" +
 				"<div id='jadedit-preview' style='display: none;'></div>" +
 				"<input type='hidden' id='jadedit-hidden' name='" + inputName + "' />" +
 			"</div>" +
@@ -36,15 +38,28 @@ var EVENTS = (function() {
 		editorElements.editorButton.onclick = function () {
 			editorElements.preview.style.display = 'none';
 			editorElements.editor.style.display = 'block';
+			editorElements.source.style.display = 'none';
 			editorElements.editorButton.className = "chosen";
 			editorElements.previewButton.className = "";
+			editorElements.sourceButton.className = "";
 		}
 
 		editorElements.previewButton.onclick = function () {
 			editorElements.preview.style.display = 'block';
 			editorElements.editor.style.display = 'none';
+			editorElements.source.style.display = 'none';
 			editorElements.previewButton.className = "chosen";
 			editorElements.editorButton.className = "";
+			editorElements.sourceButton.className = "";
+		}
+
+		editorElements.sourceButton.onclick = function() {
+			editorElements.preview.style.display = 'none';
+			editorElements.editor.style.display = 'none';
+			editorElements.source.style.display = 'block';
+			editorElements.previewButton.className = "";
+			editorElements.editorButton.className = "";
+			editorElements.sourceButton.className = "chosen";
 		}
 	}
 
@@ -342,6 +357,7 @@ var KEYSTROKE_HANDLER = (function (PROCESSOR) {
 		editorElements.editor.onkeyup = function () {
 			var result = PROCESSOR.process(editorElements.editor.value);
 
+			editorElements.source.innerText = result;
 			editorElements.hidden.value = result;
 			editorElements.preview.innerHTML = result;
 		}
@@ -372,7 +388,9 @@ var KEYSTROKE_HANDLER = (function (PROCESSOR) {
 	var editorElements = {
 		editorButton: document.getElementById('jadedit-editor-button'),
 		previewButton: document.getElementById('jadedit-preview-button'),
+		sourceButton: document.getElementById('jadedit-source-button'),
 		editor:  document.getElementById('jadedit-editor'),
+		source: document.getElementById('jadedit-source'),
 		preview: document.getElementById('jadedit-preview'),
 		hidden:  document.getElementById('jadedit-hidden')
 	};

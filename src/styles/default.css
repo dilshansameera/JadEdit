@@ -57,3 +57,14 @@
 	-ms-box-shadow: 0 0 5px 2px rgb(20, 20, 20) inset;
 	box-shadow: 0 0 5px 2px rgb(20, 20, 20) inset;
 }
+
+#jadedit-container #jadedit-editor-container #jadedit-source {
+	padding: 10px;
+	height: 300px;
+	-webkit-box-shadow: 0 0 5px 2px rgb(20, 20, 20) inset;
+	-ms-box-shadow: 0 0 5px 2px rgb(20, 20, 20) inset;
+	box-shadow: 0 0 5px 2px rgb(20, 20, 20) inset;
+	overflow-y: auto;
+	white-space: pre;
+	font-family: consolas;
+}

@@ -21,7 +21,9 @@
 	var editorElements = {
 		editorButton: document.getElementById('jadedit-editor-button'),
 		previewButton: document.getElementById('jadedit-preview-button'),
+		sourceButton: document.getElementById('jadedit-source-button'),
 		editor:  document.getElementById('jadedit-editor'),
+		source: document.getElementById('jadedit-source'),
 		preview: document.getElementById('jadedit-preview'),
 		hidden:  document.getElementById('jadedit-hidden')
 	};
