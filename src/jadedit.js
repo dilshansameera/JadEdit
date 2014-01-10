@@ -1,240 +1,32 @@
-/* JadEdit - Editor using JADE template syntax
- * =========================================== */
+/* JadEdit - An embeddable JavaScript editor using Jade template syntax.
+ * ===================================================================== */
 
-(function () {
-
-	// Returns editor template
-	// =======================
-
-	function getEditorTemplate(inputName) {
-		return "<div id='jadedit-container'>" +
-			"<div id='jadedit-button-controls'>" +
-			"<div id='jadedit-editor-button' class='chosen'>Editor</div>" +
-			"<div id='jadedit-preview-button'>Preview</div>" +
-			"</div>" +
-			"<div id='jadedit-editor-container'>" +
-			"<textarea id='jadedit-editor'></textarea>" +
-			"<div id='jadedit-preview' style='display: none;'></div>" +
-			"<input type='hidden' id='jadedit-hidden' name='" + inputName + "' />" +
-			"</div>" +
-			"</div>";
+(function Main(EDITOR, EVENTS, KEYSTROKE_HANDLER) {
+	var editorContainer = document.getElementById('jadedit');
+	if (editorContainer.length) {
+		document.write('Editor Container is not found.');
+		return;
 	}
 
-	// Registers events for the editor template
-	// ========================================
-
-	function registerEditorEvents() {
-		var editorButton = document.getElementById('jadedit-editor-button');
-		var previewButton = document.getElementById('jadedit-preview-button');
-		var editor = document.getElementById('jadedit-editor');
-		var preview = document.getElementById('jadedit-preview');
-		var hidden = document.getElementById('jadedit-hidden');
-
-		enableTab(editor);
-
-		editorButton.onclick = function () {
-			preview.style.display = 'none';
-			editor.style.display = 'block';
-			editorButton.className = "chosen";
-			previewButton.className = "";
-		}
-
-		previewButton.onclick = function () {
-			preview.style.display = 'block';
-			editor.style.display = 'none';
-			previewButton.className = "chosen";
-			editorButton.className = "";
-
-			preview.innerHTML = translateJade();
-		}
-
-		editor.onkeyup = function () {
-			hidden.value = translateJade();
-		}
+	if (!editorContainer.hasAttribute('name')) {
+		document.write('Editor does not have a name.');
+		return;
 	}
 
-	// Enables tab key on the editor
-	// =============================
+	editorContainer.innerHTML = EDITOR.getEditorTemplate(editorContainer.getAttribute('name'));
 
-	function enableTab(editor) {
-		editor.onkeydown = function (e) {
-			if (e.keyCode === 9) {
-				var val = this.value,
-					start = this.selectionStart,
-					end = this.selectionEnd;
+	var editorElements = {
+		editorButton: document.getElementById('jadedit-editor-button'),
+		previewButton: document.getElementById('jadedit-preview-button'),
+		editor:  document.getElementById('jadedit-editor'),
+		preview: document.getElementById('jadedit-preview'),
+		hidden:  document.getElementById('jadedit-hidden')
+	};
 
-				this.value = val.substring(0, start) + '\t' + val.substring(end);
-				this.selectionStart = this.selectionEnd = start + 1;
-				return false;
-			} else if (e.keycode === 9) {
-				var val = this.value,
-					start = this.selectionStart,
-					end = this.selectionEnd;
+	EVENTS.registerEditorEvents(editorElements);
+	KEYSTROKE_HANDLER.enableTab(editorElements.editor);
+	KEYSTROKE_HANDLER.enablePreview(editorElements.editor);
 
-				this.value = val.substring(0, start) + '\n' + val.substring(end);
-				this.selectionStart = this.selectionEnd = start + 1;
-				return false;
-			}
-		};
-	}
+	EVENTS.registerPreviewProcessor(editorElements.preview, 'jade');
 
-	// Converts jade texts in the editor to HTML elements
-	// ==================================================
-
-	function translateJade() {
-		var source = document.getElementById('jadedit-editor').value;
-		var result = "";
-
-		var lines = source.split('\n');
-
-		for (var i = 0; i < lines.length; i++) {
-			if (lines[i].trim().length < 1) {
-				continue;
-			}
-
-			var currentResult = processLine(i, lines);
-			result += currentResult.processedLine;
-			i = currentResult.newLocation;
-		}
-
-		return result;
-	}
-
-	// Recursive line translator
-	// =========================
-
-	function processLine(currentLocation, allLines) {
-		var currentLineContents = allLines[currentLocation];
-		var currentInnerContents = "";
-
-		var currentTabCount = tabCounter(currentLineContents);
-		currentLineContents = currentLineContents.trim();
-
-		var isContinuedLine = currentLineContents[0] == '|';
-
-		var firstSpace = currentLineContents.indexOf(' ');
-		if (firstSpace == -1) firstSpace = currentLineContents.length;
-
-		var currentElement = currentLineContents.substring(0, firstSpace);
-		currentInnerContents +=
-			currentLineContents.substring(firstSpace, currentLineContents.length).trim();
-
-		// handling child elements
-		while (currentLocation + 1 < allLines.length
-			&& (currentTabCount + 1) == tabCounter(allLines[currentLocation + 1])) {
-			currentLocation++;
-
-			var recursionResult = processLine(currentLocation, allLines);
-			currentInnerContents += recursionResult.processedLine;
-			currentLocation = recursionResult.newLocation;
-		}
-
-		return {
-			'processedLine': createTag(currentElement, currentInnerContents, isContinuedLine),
-			'newLocation': currentLocation
-		};
-	}
-
-	// Forms an html tag
-	// =================
-
-	function createTag(element, innerContents, isContinuedLine) {
-		var processedElement = processTagAttributes(element.trim())
-
-		if (processedElement.withoutAttribute !== 'br') {
-			if (!isContinuedLine)
-				return "<" + processedElement.withAttribute + ">" +
-					innerContents +
-					"</" + processedElement.withoutAttribute + ">";
-			else
-				return innerContents;
-		}
-
-		if (!isContinuedLine)
-			return "<" + processedElement.withAttribute + "/>" +
-				innerContents;
-		else
-			return innerContents;
-	}
-
-	// Returns number of consecutive tabs found in the beginning for a string
-	// ======================================================================
-
-	function tabCounter(str) {
-		for (var tabCount = 0; tabCount < str.length; tabCount++) {
-			if (str[tabCount] != '\t') {
-				return tabCount;
-			}
-		}
-	}
-
-	// Process attributes included in element for html tags
-	// ====================================================
-
-	function processTagAttributes(element) {
-		var elementWithAttribute = "";
-		var elementWithoutAttribute = "";
-
-		//TODO: Refactor
-		for (var i = 0; i < element.length; i++) {
-			if (element[i] == '.') {
-				elementWithAttribute += " class='";
-				i++;
-				while (element[i] != '.' && element[i] != '#' && i < element.length) {
-					elementWithAttribute += element[i];
-					i++;
-				}
-
-				if (element[i] == '.' || element[i] == '#') {
-					i--;
-				}
-
-				elementWithAttribute += "'";
-			} else if (element[i] == '#') {
-				elementWithAttribute += " id='";
-				i++;
-				while (element[i] != '.' && element[i] != '#' && i < element.length) {
-					elementWithAttribute += element[i];
-					i++;
-				}
-
-				if (element[i] == '.' || element[i] == '#') {
-					i--;
-				}
-
-				elementWithAttribute += "'";
-			}
-			else {
-				elementWithAttribute += element[i];
-				elementWithoutAttribute += element[i];
-			}
-
-		}
-
-		return {
-			'withAttribute': elementWithAttribute,
-			'withoutAttribute': elementWithoutAttribute
-		}
-	}
-
-	// Prepares the editor interface on page load
-	// ==========================================
-
-	(function load() {
-		var container = document.getElementById('jadedit');
-		var inputName = container.getAttribute("name");
-
-		if (container == null) {
-			alert('Editor placeholder not found!');
-			return;
-		}
-
-		if (inputName == null) {
-			alert('No name attribute found. Form submit will not work!');
-			return;
-		}
-
-		container.innerHTML = getEditorTemplate(inputName);
-		registerEditorEvents();
-	})();
-})();
+}(EDITOR, EVENTS, KEYSTROKE_HANDLER));

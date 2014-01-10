@@ -13,6 +13,20 @@ Design Document
 
 ### High Level Entities
 
+#### Editor Module
+
+
+#### Processor Module
+
+
+#### Utility Module
+
+
+#### Event Module
+
+
+#### Keystorke Handler Module
+
 ==================
 
 ### Low Level Entities
