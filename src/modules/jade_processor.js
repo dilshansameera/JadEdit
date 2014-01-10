@@ -3,6 +3,13 @@ var JADE_PROCESSOR = (function(UTIL) {
 
 	jadeProcessor.process = function(currentLocation, splitedByLine) {
 		var currentLineContents = splitedByLine[currentLocation];
+		if (currentLineContents.length < 1) {
+			return {
+				'processedLine': "",
+				'newLocation': currentLocation
+			}
+		}
+
 		var currentInnerContents = "";
 
 		var currentTabCount = UTIL.tabCounter(currentLineContents);

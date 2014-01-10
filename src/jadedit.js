@@ -27,7 +27,7 @@
 	};
 
 	EVENTS.registerEditorEvents(editorElements);
-	KEYSTROKE_HANDLER.enableTab(editorElements.editor);
+	KEYSTROKE_HANDLER.enableTab(editorElements);
 
 	PROCESSOR.setCurrentProcessor('jade');
 	KEYSTROKE_HANDLER.enablePreview(editorElements);

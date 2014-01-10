@@ -7,9 +7,9 @@ var KEYSTROKE_HANDLER = (function (PROCESSOR) {
 	// Enables tab key functionality in the editor
 	// ==========================================
 
-	keystrokeHandler.enableTab = function(editor)
+	keystrokeHandler.enableTab = function(editorElements)
 	{
-		editor.keydown = function (e) {
+		editorElements.editor.onkeydown = function (e) {
 			if (e.keyCode === 9) {
 				var val = this.value,
 					start = this.selectionStart,
