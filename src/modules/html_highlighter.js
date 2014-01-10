@@ -3,6 +3,7 @@
 
 var HTML_HIGHLIGHTER = (function (UTIL) {
 	var htmlTagRegex = /<.*?>/g;
+	var classRegex = /(?![<](.*?))(class)(?=(.*?)[>])/;
 
 	var htmlHighlighter = {};
 
@@ -15,38 +16,21 @@ var HTML_HIGHLIGHTER = (function (UTIL) {
 			for (var index = 0; index < tagsFound.length; index++) {
 				var nonTag =  currentLine.substring(0, currentLine.indexOf(tagsFound[index]));
 				if (nonTag.length > 0) {
-					var plain = document.createElement('code');
-					plain.setAttribute('class', 'plain');
-					plain.innerText += nonTag;
-
-					nonTag = plain.outerHTML;
+					nonTag = createCodeElement('plain', nonTag);
 				}
-
 				result += nonTag;
 
-				var newTag = document.createElement('code');
-				newTag.setAttribute('class', 'keyword');
-				newTag.innerText += tagsFound[index];
-
-				result += newTag.outerHTML;
+				result += createCodeElement('keyword', tagsFound[index])
 
 				currentLine = currentLine.substring(currentLine.indexOf(tagsFound[index]) +
 					tagsFound[index].length, currentLine.length);
 			}
 
 			if (currentLine.length != 0) {
-				var plain = document.createElement('code');
-				plain.setAttribute('class', 'plain');
-				plain.innerText += currentLine;
-
-				result += plain.outerHTML;
+				result += createCodeElement('plain', currentLine);
 			}
 		} else {
-			var plain = document.createElement('code');
-			plain.setAttribute('class', 'plain');
-			plain.innerText += currentLine;
-
-			result += plain.outerHTML;
+			result += createCodeElement('plain', currentLine);
 		}
 
 
@@ -54,6 +38,17 @@ var HTML_HIGHLIGHTER = (function (UTIL) {
 			'processedLine': result + '\n',
 			'newLocation': currentLocation
 		};
+
+		// Creates Code Elements that wraps each syntax highlighted components
+		// ===================================================================
+
+		function createCodeElement(className, innerText) {
+			var codeElement = document.createElement('code');
+			codeElement.setAttribute('class', className);
+			codeElement.innerText = innerText;
+
+			return codeElement.outerHTML;
+		}
 	};
 
 	return htmlHighlighter;
