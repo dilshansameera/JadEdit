@@ -68,3 +68,12 @@
 	white-space: pre;
 	font-family: consolas;
 }
+
+#jadedit-container #jadedit-editor-container #jadedit-source code.keyword {
+	color: #5ba1cf !important;
+	font-weight: bold !important;
+}
+
+#jadedit-container #jadedit-editor-container #jadedit-source code.plain {
+	color: #b9bdb6 !important;
+}

@@ -23,9 +23,18 @@ var HIGHLIGHTER = (function() {
 		}
 	}
 
-	highlighter.process = function(source) {
+	highlighter.highlight = function(source) {
+		var result = "";
 
-		// return currentHighlighter.highlight();
+		var splitedByLine = source.split('\n');
+
+		for (var i = 0; i < splitedByLine.length; i++) {
+			var currentResult = currentHighlighter.highlight(i, splitedByLine);
+			result += currentResult.processedLine;
+			i = currentResult.newLocation;
+		}
+
+		return result;
 	}
 
 	return highlighter;

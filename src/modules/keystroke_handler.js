@@ -1,7 +1,7 @@
 /* JadEdit - An embeddable JavaScript editor using Jade template syntax.
  * ===================================================================== */
 
-var KEYSTROKE_HANDLER = (function (PROCESSOR) {
+var KEYSTROKE_HANDLER = (function (PROCESSOR, HIGHLIGHTER) {
 	var keystrokeHandler = {};
 
 	// Enables tab key functionality in the editor
@@ -29,11 +29,13 @@ var KEYSTROKE_HANDLER = (function (PROCESSOR) {
 		editorElements.editor.onkeyup = function () {
 			var result = PROCESSOR.process(editorElements.editor.value);
 
-			editorElements.source.innerText = result;
+			HIGHLIGHTER.setCurrentProcessor('html');
+
+			editorElements.source.innerHTML = HIGHLIGHTER.highlight(result);
 			editorElements.hidden.value = result;
 			editorElements.preview.innerHTML = result;
 		}
 	}
 
 	return keystrokeHandler;
-}(PROCESSOR));
+}(PROCESSOR, HIGHLIGHTER));
