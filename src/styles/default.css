@@ -80,3 +80,13 @@
 	color: #b9bdb6 !important;
 	font-family: consolas !important;
 }
+
+#jadedit-container #jadedit-editor-container #jadedit-source code.attribute {
+	color: white !important;
+	font-family: consolas !important;
+}
+
+#jadedit-container #jadedit-editor-container #jadedit-source code.string {
+	color: darkorange !important;
+	font-family: consolas !important;
+}
