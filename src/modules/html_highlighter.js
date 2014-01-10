@@ -12,9 +12,17 @@ var HTML_HIGHLIGHTER = (function (UTIL) {
 		var result = "";
 
 		if (tagsFound != null) {
-
 			for (var index = 0; index < tagsFound.length; index++) {
-				result += currentLine.substring(0, currentLine.indexOf(tagsFound[index]));
+				var nonTag =  currentLine.substring(0, currentLine.indexOf(tagsFound[index]));
+				if (nonTag.length > 0) {
+					var plain = document.createElement('code');
+					plain.setAttribute('class', 'plain');
+					plain.innerText += nonTag;
+
+					nonTag = plain.outerHTML;
+				}
+
+				result += nonTag;
 
 				var newTag = document.createElement('code');
 				newTag.setAttribute('class', 'keyword');
@@ -27,10 +35,18 @@ var HTML_HIGHLIGHTER = (function (UTIL) {
 			}
 
 			if (currentLine.length != 0) {
-				result += currentLine;
+				var plain = document.createElement('code');
+				plain.setAttribute('class', 'plain');
+				plain.innerText += currentLine;
+
+				result += plain.outerHTML;
 			}
 		} else {
-			result += currentLine;
+			var plain = document.createElement('code');
+			plain.setAttribute('class', 'plain');
+			plain.innerText += currentLine;
+
+			result += plain.outerHTML;
 		}
 
 

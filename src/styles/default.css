@@ -72,8 +72,10 @@
 #jadedit-container #jadedit-editor-container #jadedit-source code.keyword {
 	color: #5ba1cf !important;
 	font-weight: bold !important;
+	font-family: consolas !important;
 }
 
 #jadedit-container #jadedit-editor-container #jadedit-source code.plain {
 	color: #b9bdb6 !important;
+	font-family: consolas !important;
 }
