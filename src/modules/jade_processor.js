@@ -29,7 +29,7 @@ var JADE_PROCESSOR = (function(UTIL) {
 			&& (currentTabCount + 1) == UTIL.tabCounter(splitedByLine[currentLocation + 1])) {
 			currentLocation++;
 
-			var recursionResult = processLine(currentLocation, splitedByLine);
+			var recursionResult = this.process(currentLocation, splitedByLine);
 			currentInnerContents += recursionResult.processedLine;
 			currentLocation = recursionResult.newLocation;
 		}
