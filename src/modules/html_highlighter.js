@@ -1,12 +1,12 @@
 /* JadEdit - An embeddable JavaScript editor using Jade template syntax.
  * ===================================================================== */
 
-var HTML_PROCESSOR = (function(UTIL) {
-	var htmlProcessor = {};
+var HTML_HIGHLIGHTER = (function(UTIL) {
+	var htmlHighlighter = {};
 
-	htmlProcessor.process = function() {
+	htmlHighlighter.highlight = function() {
 		return "";
 	};
 
-	return htmlProcessor;
+	return htmlHighlighter;
 }(UTIL));

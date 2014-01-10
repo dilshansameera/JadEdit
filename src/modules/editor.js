@@ -14,7 +14,7 @@ var EDITOR = (function () {
 				"<div id='jadedit-preview-button'>Preview</div>" +
 			"</div>" +
 			"<div id='jadedit-editor-container'>" +
-				"<textarea id='jadedit-editor'></textarea>" +
+				"<textarea id='jadedit-editor' spellcheck='false'></textarea>" +
 				"<div id='jadedit-preview' style='display: none;'></div>" +
 				"<input type='hidden' id='jadedit-hidden' name='" + inputName + "' />" +
 			"</div>" +

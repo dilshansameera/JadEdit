@@ -6,8 +6,7 @@ var PROCESSOR = (function() {
 
 	var processor = {
 		html: HTML_PROCESSOR,
-		jade: JADE_PROCESSOR,
-		markdown: MARKDOWN_PROCESSOR
+		jade: JADE_PROCESSOR
 	};
 
 	// Sets the current processor
@@ -18,8 +17,6 @@ var PROCESSOR = (function() {
 			currentProcess =  processor.html;
 		} else if (processorType === 'jade') {
 			currentProcess =  processor.jade;
-		} else if (processorType === 'markdown') {
-			currentProcess =  processor.markdown;
 		}
 	}
 
