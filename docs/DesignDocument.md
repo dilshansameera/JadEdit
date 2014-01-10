@@ -8,12 +8,12 @@ Design Document
 
 
 
-### Purpose
-===========
+## Purpose
 
 
-### High Level Entities
-=======================
+
+## High Level Entities
+
 
 
 ##### Editor Module
@@ -46,8 +46,8 @@ Utility Module defines set of utility methods that can be used from various modu
 Loads all the modules on the pageload and starts the application.
 
 
-### Low Level Entities
-======================
+## Low Level Entities
+
 
 
 ##### Editor Module
