@@ -9,10 +9,12 @@ Design Document
 
 
 ### Purpose
-
+===========
 
 
 ### High Level Entities
+=======================
+
 
 ##### Editor Module
 
@@ -45,6 +47,8 @@ Loads all the modules on the pageload and starts the application.
 
 
 ### Low Level Entities
+======================
+
 
 ##### Editor Module
 
