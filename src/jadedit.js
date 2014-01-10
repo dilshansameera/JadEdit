@@ -25,8 +25,6 @@
 
 	EVENTS.registerEditorEvents(editorElements);
 	KEYSTROKE_HANDLER.enableTab(editorElements.editor);
-	KEYSTROKE_HANDLER.enablePreview(editorElements.editor);
-
-	EVENTS.registerPreviewProcessor(editorElements.preview, 'jade');
+	KEYSTROKE_HANDLER.enablePreview(editorElements.editor, editorElements.hidden, 'jade');
 
 }(EDITOR, EVENTS, KEYSTROKE_HANDLER));

@@ -6,11 +6,11 @@ SCRIPTS = [
 	'../src/modules/editor.js',
 	'../src/modules/events.js',
 	'../src/modules/util.js',
-	'../src/modules/keystroke_handler.js',
     '../src/modules/jade_processor.js',
     '../src/modules/html_processor.js',
     '../src/modules/markdown_processor.js',
     '../src/modules/processor.js',
+    '../src/modules/keystroke_handler.js',
     '../src/jadedit.js',
     ]
 

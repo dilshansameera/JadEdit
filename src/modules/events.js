@@ -22,9 +22,5 @@ var EVENTS = (function() {
 		}
 	}
 
-	events.registerPreviewProcessor = function(preview, processorType) {
-		preview.innerHTML = PROCESSOR.process(processorType);
-	}
-
 	return events;
 }());

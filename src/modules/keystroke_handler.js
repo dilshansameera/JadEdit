@@ -2,7 +2,7 @@
  * ===================================================================== */
 
 
-var KEYSTROKE_HANDLER = (function () {
+var KEYSTROKE_HANDLER = (function (PROCESSOR) {
 	var keystrokeHandler = {};
 
 	keystrokeHandler.enableTab = function(editor)
@@ -20,11 +20,11 @@ var KEYSTROKE_HANDLER = (function () {
 		};
 	}
 
-	keystrokeHandler.enablePreview = function(editor, hidden) {
+	keystrokeHandler.enablePreview = function(editor, hidden, processorType) {
 		editor.onkeyup = function () {
-			hidden.value = translateJade();
+			hidden.value = PROCESSOR.process(processorType);
 		}
 	}
 
 	return keystrokeHandler;
-}());
+}(PROCESSOR));
