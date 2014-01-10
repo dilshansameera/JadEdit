@@ -24,30 +24,31 @@ var HTML_HIGHLIGHTER = (function (UTIL) {
 
 				var currentTagFound = tagsFound[index];
 
-				// Checks if currently being processed html tag has any thing needs to be highlighted
-				if (classRegex.test(currentTagFound)) {
-					var classLocation = classRegex.exec(currentTagFound).index;
+				while (classRegex.test(currentTagFound) ||stringRegex.test(currentTagFound)) {
+					// Checks if currently being processed html tag has any thing needs to be highlighted
+					if (classRegex.test(currentTagFound)) {
+						var classLocation = classRegex.exec(currentTagFound).index;
 
-					result += createCodeElement('keyword',
-						currentTagFound.substring(0, classLocation));
-					result += createCodeElement('attribute', 'class');
-					currentTagFound = currentTagFound.substring(classLocation
-						+ 'class'.length, currentTagFound.length)
-				}
+						result += createCodeElement('keyword',
+							currentTagFound.substring(0, classLocation));
+						result += createCodeElement('attribute', 'class');
+						currentTagFound = currentTagFound.substring(classLocation
+							+ 'class'.length, currentTagFound.length)
+					}
 
-				if (stringRegex.test(currentTagFound)) {
-					var string = stringRegex.exec(currentTagFound);
-					var stringLocation = string.index;
+					if (stringRegex.test(currentTagFound)) {
+						var string = stringRegex.exec(currentTagFound);
+						var stringLocation = string.index;
 
-					result += createCodeElement('keyword',
-						currentTagFound.substring(0, stringLocation));
-					result += createCodeElement('string', string[0]);
-					currentTagFound = currentTagFound.substring(stringLocation
-						+ string[0].length, currentTagFound.length)
+						result += createCodeElement('keyword',
+							currentTagFound.substring(0, stringLocation));
+						result += createCodeElement('string', string[0]);
+						currentTagFound = currentTagFound.substring(stringLocation
+							+ string[0].length, currentTagFound.length)
+					}
 				}
 
 				result += createCodeElement('keyword', currentTagFound);
-
 
 				// Set the current line as remaining texts that comes after the first keyword found
 				currentLine = currentLine.substring(currentLine.indexOf(tagsFound[index]) +
