@@ -1,9 +1,11 @@
 /* JadEdit - An embeddable JavaScript editor using Jade template syntax.
  * ===================================================================== */
 
-
 var KEYSTROKE_HANDLER = (function (PROCESSOR) {
 	var keystrokeHandler = {};
+
+	// Enables tab key functionality in the editor
+	// ==========================================
 
 	keystrokeHandler.enableTab = function(editor)
 	{
@@ -19,6 +21,10 @@ var KEYSTROKE_HANDLER = (function (PROCESSOR) {
 			}
 		};
 	}
+
+	// Sets the type of process to use on key up event in the editor
+	// ============================================================
+	//TODO: Should we move this to the process.js file?
 
 	keystrokeHandler.enablePreview = function(editor, hidden, processorType) {
 		editor.onkeyup = function () {

@@ -1,4 +1,4 @@
-var HTML_PROCESSOR = (function() {
+var HTML_PROCESSOR = (function(UTIL) {
 	var htmlProcessor = {};
 
 	htmlProcessor.process = function() {
@@ -6,4 +6,4 @@ var HTML_PROCESSOR = (function() {
 	};
 
 	return htmlProcessor;
-}());
+}(UTIL));

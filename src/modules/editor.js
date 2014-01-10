@@ -4,6 +4,9 @@
 var EDITOR = (function () {
 	var editor = {};
 
+	// Returns a string value representing the editor template
+	// =======================================================
+
 	editor.getEditorTemplate = function (inputName) {
 		return "<div id='jadedit-container'>" +
 			"<div id='jadedit-button-controls'>" +

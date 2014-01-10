@@ -4,6 +4,9 @@
 var EVENTS = (function() {
 	var events = {};
 
+	// Registers the global editor events
+	// ==================================
+
 	events.registerEditorEvents = function(editorElements) {
 		editorElements.editorButton.onclick = function () {
 			editorElements.preview.style.display = 'none';

@@ -1,6 +1,9 @@
 /* JadEdit - An embeddable JavaScript editor using Jade template syntax.
  * ===================================================================== */
 
+// The staring point of the applications. Initializes the components
+// =================================================================
+
 (function Main(EDITOR, EVENTS, KEYSTROKE_HANDLER) {
 	var editorContainer = document.getElementById('jadedit');
 	if (editorContainer.length) {

@@ -1,13 +1,15 @@
 /* JadEdit - An embeddable JavaScript editor using Jade template syntax.
  * ===================================================================== */
 
-
 var PROCESSOR = (function(processorType) {
 	var processor = {
 		html: HTML_PROCESSOR,
 		jade: JADE_PROCESSOR,
 		markdown: MARKDOWN_PROCESSOR
 	};
+
+	// Calls the process method according to the processor type passed in
+	// ==================================================================
 
 	processor.process = function() {
 		if (processorType === 'html') {

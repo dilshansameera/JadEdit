@@ -1,4 +1,4 @@
-var MARKDOWN_PROCESSOR = (function() {
+var MARKDOWN_PROCESSOR = (function(UTIL) {
 	var markdownProcessor = {};
 
 	markdownProcessor.process = function() {
@@ -7,4 +7,4 @@ var MARKDOWN_PROCESSOR = (function() {
 
 
 	return markdownProcessor;
-}());
+}(UTIL));

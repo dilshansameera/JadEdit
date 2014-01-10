@@ -1,4 +1,4 @@
-var JADE_PROCESSOR = (function() {
+var JADE_PROCESSOR = (function(UTIL) {
 	var jadeProcessor = {};
 
 	jadeProcessor.process = function() {
@@ -6,4 +6,4 @@ var JADE_PROCESSOR = (function() {
 	};
 
 	return jadeProcessor;
-}());
+}(UTIL));
