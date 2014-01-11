@@ -82,7 +82,13 @@ var HTML_HIGHLIGHTER = (function (UTIL) {
 		function createCodeElement(className, innerText) {
 			var codeElement = document.createElement('code');
 			codeElement.setAttribute('class', className);
-			codeElement.innerText = innerText;
+
+			// FireFox does not support InnerText
+			if (codeElement.innerText == undefined) {
+				codeElement.textContent = innerText;
+			} else {
+				codeElement.innerText = innerText;
+			}
 
 			return codeElement.outerHTML;
 		}

@@ -7,8 +7,7 @@ var KEYSTROKE_HANDLER = (function (PROCESSOR, HIGHLIGHTER) {
 	// Enables tab key functionality in the editor
 	// ==========================================
 
-	keystrokeHandler.enableTab = function(editorElements)
-	{
+	keystrokeHandler.enableTab = function (editorElements) {
 		editorElements.editor.onkeydown = function (e) {
 			if (e.keyCode === 9) {
 				var val = this.value,
@@ -25,13 +24,13 @@ var KEYSTROKE_HANDLER = (function (PROCESSOR, HIGHLIGHTER) {
 	// Sets the type of process to use on key up event in the editor
 	// ============================================================
 
-	keystrokeHandler.enablePreview = function(editorElements) {
+	keystrokeHandler.enablePreview = function (editorElements) {
 		editorElements.editor.onkeyup = function () {
 			var result = PROCESSOR.process(editorElements.editor.value);
 
 			HIGHLIGHTER.setCurrentProcessor('html');
+			editorElements.source.innerHTML =HIGHLIGHTER.highlight(result);
 
-			editorElements.source.innerHTML = HIGHLIGHTER.highlight(result);
 			editorElements.hidden.value = result;
 			editorElements.preview.innerHTML = result;
 		}
