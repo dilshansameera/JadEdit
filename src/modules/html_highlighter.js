@@ -32,6 +32,7 @@ var HTML_HIGHLIGHTER = (function (UTIL) {
 
 				var currentTagFound = tagsFound[index];
 
+				// highlights all attributes and strings in the current tag found
 				while (regexCollection['attribute'].test(currentTagFound)
 					|| regexCollection['string'].test(currentTagFound)) {
 					for (var key in regexCollection) {
@@ -46,6 +47,7 @@ var HTML_HIGHLIGHTER = (function (UTIL) {
 								result += createCodeElement('plain',
 									currentTagFound.substring(0, keywordLocation));
 							}
+
 							result += createCodeElement(key, keyword[0]);
 							currentTagFound = currentTagFound.substring(keywordLocation
 								+ keyword[0].length, currentTagFound.length);
