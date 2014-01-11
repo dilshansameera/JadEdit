@@ -1,0 +1,96 @@
+#jadedit-container {
+	font-family: Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+	font-size: 14px;
+	border: 0;
+	padding: 0;
+	margin: 0;
+	color: white;
+	tab-size: 4 !important;
+	-moz-tab-size: 4 !important;
+	-webkit-tab-size: 4 !important;
+	-ms-tab-size: 4 !important;
+}
+
+#jadedit-container #jadedit-button-controls {
+	background-color: rgb(65, 65, 65);
+
+}
+
+#jadedit-container #jadedit-button-controls div {
+	display: inline-block;
+	padding: 5px 10px;
+}
+
+#jadedit-container #jadedit-button-controls div:hover {
+	cursor: pointer;
+}
+
+#jadedit-container #jadedit-button-controls .chosen {
+	background-color: rgb(34, 34,34);
+	font-weight: bold;
+}
+
+#jadedit-container #jadedit-editor-container {
+	background-color: rgb(34, 34, 34);
+}
+
+#jadedit-container #jadedit-editor-container #jadedit-editor {
+	font-family: consolas;
+	font-size: 1em;
+	border: none;
+	background-color: rgb(34, 34, 34);
+	border-collapse: collapse;
+	color: white;
+	padding: 10px;
+	width: 100%;
+	height: 320px;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box; /* Firefox, other Gecko */
+	box-sizing: border-box; /* Opera/IE 8+ */
+	resize: none;
+	outline: none;
+	-webkit-box-shadow: 0 0 5px 2px rgb(20, 20, 20) inset;
+	-ms-box-shadow: 0 0 5px 2px rgb(20, 20, 20) inset;
+	box-shadow: 0 0 5px 2px rgb(20, 20, 20) inset;
+}
+
+#jadedit-container #jadedit-editor-container #jadedit-preview {
+	padding: 10px;
+	height: 300px;
+	-webkit-box-shadow: 0 0 5px 2px rgb(20, 20, 20) inset;
+	-ms-box-shadow: 0 0 5px 2px rgb(20, 20, 20) inset;
+	box-shadow: 0 0 5px 2px rgb(20, 20, 20) inset;
+	overflow-x: auto;
+}
+
+#jadedit-container #jadedit-editor-container #jadedit-source {
+	padding: 10px;
+	height: 300px;
+	-webkit-box-shadow: 0 0 5px 2px rgb(20, 20, 20) inset;
+	-ms-box-shadow: 0 0 5px 2px rgb(20, 20, 20) inset;
+	box-shadow: 0 0 5px 2px rgb(20, 20, 20) inset;
+	overflow-y: auto;
+	white-space: pre;
+	font-family: consolas;
+}
+
+#jadedit-container #jadedit-editor-container #jadedit-source code.keyword {
+	color: #5ba1cf !important;
+	font-weight: bold !important;
+	font-family: consolas !important;
+}
+
+#jadedit-container #jadedit-editor-container #jadedit-source code.plain {
+	color: #b9bdb6 !important;
+	font-family: consolas !important;
+}
+
+#jadedit-container #jadedit-editor-container #jadedit-source code.attribute {
+	color: white !important;
+	font-family: consolas !important;
+}
+
+#jadedit-container #jadedit-editor-container #jadedit-source code.string {
+	color: #5ce638 !important;
+	font-family: consolas !important;
+}
