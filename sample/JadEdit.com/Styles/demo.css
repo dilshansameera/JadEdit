@@ -101,7 +101,11 @@ body header ul li a {
 }
 
 .contents .info {
-	color: gray;
+	color: lightgray;
+}
+
+.contents ul {
+	padding-left: 20px;
 }
 
 .contents form .editor-row {

@@ -28,8 +28,8 @@
 <div class='contents'>
 	<h1><?php echo $_POST["title"]; ?></h1>
 	<h4 class='info'>
-	Author: <?php echo $_POST["author"]; ?><br/>
-	Date:  <?php echo(Date("l F d, Y")); ?>
+	By <?php echo $_POST["author"]; ?><br/>
+	On <?php echo(Date("l F d, Y")); ?>
 	</h4>
 	<br/>
 	<div>
@@ -38,7 +38,7 @@
 </div>
 <footer>
 	<div class="copyright">
-		Copyright © 2014 <a href="http://wys.io/">Won Song</a> and the future <a href="https://github.com/WonSong/JadEdit/blob/master/CONTRIBUTORS.md">contributors</a>. All Rights Reserved.<br />
+		Copyright © 2014 <a href="http://wys.io/">Won Song</a> and the <a href="https://github.com/WonSong/JadEdit/blob/master/CONTRIBUTORS.md">contributors</a>. All Rights Reserved.<br />
 		Released under <a href="https://github.com/WonSong/JadEdit/blob/master/LICENSE">the MIT license.</a>
 	</div>
 </footer>

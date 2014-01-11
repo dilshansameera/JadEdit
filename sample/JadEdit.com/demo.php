@@ -51,7 +51,7 @@
 </div>
 <footer>
 	<div class="copyright">
-		Copyright © 2014 <a href="http://wys.io/">Won Song</a> and the future <a href="https://github.com/WonSong/JadEdit/blob/master/CONTRIBUTORS.md">contributors</a>. All Rights Reserved.<br />
+		Copyright © 2014 <a href="http://wys.io/">Won Song</a> and the <a href="https://github.com/WonSong/JadEdit/blob/master/CONTRIBUTORS.md">contributors</a>. All Rights Reserved.<br />
 		Released under <a href="https://github.com/WonSong/JadEdit/blob/master/LICENSE">the MIT license.</a>
 	</div>
 </footer>
