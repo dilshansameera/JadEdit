@@ -2,9 +2,17 @@
  * ===================================================================== */
 
 var HTML_HIGHLIGHTER = (function (UTIL) {
-	var htmlTagRegex = /<.*?>/gi;
-	var classRegex = /(?![<](.*?))(class) ?[=](?=(.*?)[>])/i;
-	var stringRegex = /(?![<](.*?))['|"](.*?)['|"](?=(.*?)[>])/i;
+	var htmlTagRegex = /(?!<)[A-Za-z'" =\d:]+(?=(>|\/>))/gi;
+
+	// Regex for detecting certain keywords inside the HTML tag
+	var regexCollection = {
+		// Class attribute
+		//'attribute': /(?![<](.*?))(class|id|href|type|rel|accesskey|hidden|required|style) ?(?=(=))(?=(.*?)[>])/i,
+		'attribute': /(\s)+(class|id|href|type|rel|accesskey|hidden|required|style) ?(?=(=))/i,
+		// String literal
+		//'string': /(?![<](.*?))['|"](.*?)['|"](?=(.*?)[>])/i
+		'string': /(?![=](\s)+)['|"](.*?)['|"]/
+	};
 
 	var htmlHighlighter = {};
 
@@ -24,27 +32,24 @@ var HTML_HIGHLIGHTER = (function (UTIL) {
 
 				var currentTagFound = tagsFound[index];
 
-				while (classRegex.test(currentTagFound) ||stringRegex.test(currentTagFound)) {
-					// Checks if currently being processed html tag has any thing needs to be highlighted
-					if (classRegex.test(currentTagFound)) {
-						var classLocation = classRegex.exec(currentTagFound).index;
+				while (regexCollection['attribute'].test(currentTagFound)
+					|| regexCollection['string'].test(currentTagFound)) {
+					for (var key in regexCollection) {
+						if (regexCollection[key].test(currentTagFound)) {
+							var keyword = regexCollection[key].exec(currentTagFound);
+							var keywordLocation = keyword.index;
 
-						result += createCodeElement('keyword',
-							currentTagFound.substring(0, classLocation));
-						result += createCodeElement('attribute', 'class');
-						currentTagFound = currentTagFound.substring(classLocation
-							+ 'class'.length, currentTagFound.length)
-					}
-
-					if (stringRegex.test(currentTagFound)) {
-						var string = stringRegex.exec(currentTagFound);
-						var stringLocation = string.index;
-
-						result += createCodeElement('keyword',
-							currentTagFound.substring(0, stringLocation));
-						result += createCodeElement('string', string[0]);
-						currentTagFound = currentTagFound.substring(stringLocation
-							+ string[0].length, currentTagFound.length)
+							if (currentTagFound.substring(0, keywordLocation) != '=') {
+								result += createCodeElement('keyword',
+									currentTagFound.substring(0, keywordLocation));
+							} else {
+								result += createCodeElement('plain',
+									currentTagFound.substring(0, keywordLocation));
+							}
+							result += createCodeElement(key, keyword[0]);
+							currentTagFound = currentTagFound.substring(keywordLocation
+								+ keyword[0].length, currentTagFound.length);
+						}
 					}
 				}
 

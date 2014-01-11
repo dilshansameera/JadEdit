@@ -91,6 +91,6 @@
 }
 
 #jadedit-container #jadedit-editor-container #jadedit-source code.string {
-	color: darkorange !important;
+	color: #5ce638 !important;
 	font-family: consolas !important;
 }
