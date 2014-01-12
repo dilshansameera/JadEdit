@@ -468,13 +468,20 @@ var EDITOR = (function (PROCESSOR, HIGHLIGHTER) {
 		editorElements.$editor
 			.on("input keydown keyup propertychange click paste cut copy mousedown mouseup change",
 			function () {
-				editorElements.$caret.css('opacity', 1);
 				clearTimeout(timer);
 				timer = setTimeout(update, 10);
 			});
 
-		editorElements.$editor.blur(function() {
-			editorElements.$caret.css('opacity', 0);
+		editorElements.$editor.keydown(function(e) {
+			if (e.keyCode === 9) {
+				var val = this.value,
+					start = this.selectionStart,
+					end = this.selectionEnd;
+
+				this.value = val.substring(0, start) + '\t' + val.substring(end);
+				this.selectionStart = this.selectionEnd = start + 1;
+				return false;
+			}
 		});
 
 		function update() {
