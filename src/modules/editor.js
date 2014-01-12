@@ -72,9 +72,14 @@ var EDITOR = (function (PROCESSOR, HIGHLIGHTER) {
 		editorElements.$editor
 			.on("input keydown keyup propertychange click paste cut copy mousedown mouseup change",
 			function () {
+				editorElements.$caret.css('opacity', 1);
 				clearTimeout(timer);
 				timer = setTimeout(update, 10);
 			});
+
+		editorElements.$editor.blur(function() {
+			editorElements.$caret.css('opacity', 0);
+		});
 
 		function update() {
 			HIGHLIGHTER.setCurrentHighlighter('jade');
@@ -116,11 +121,17 @@ var EDITOR = (function (PROCESSOR, HIGHLIGHTER) {
 			var x = lastRect.left + lastRect.width - offset[0] + document.documentElement.scrollLeft,
 				y = lastRect.top - real_element.scrollTop - offset[1] + document.documentElement.scrollTop;
 
+			// Setting the default position the cursor
+			if (x == 0 && y == 0) {
+				x = 10;
+				y = 10;
+			}
+
 			caret.style.cssText = "top: " + y + "px; left: " + x + "px";
 		}
 
 		function getPos(element) {
-			e = element[0];
+			var e = element[0];
 			var x = 0;
 			var y = 0;
 			while (e.offsetParent !== null) {
