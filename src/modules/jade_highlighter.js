@@ -4,8 +4,8 @@
 
 var JADE_HIGHLIGHTER = (function (UTIL) {
 	var regexCollection = {
-		'className': /[.][A-Za-z_\-\\.]+/i,
-		'id': /[#][A-Za-z_-]+/i
+		'id': /[#][A-Za-z_-]+/i,
+		'className': /[.][A-Za-z_\-\\.]+/i
 	};
 
 	var jadeHighlighter = {};
@@ -30,34 +30,51 @@ var JADE_HIGHLIGHTER = (function (UTIL) {
 			result += '<br/>';
 		}
 
-		for (var index = 0; index < currentElement.length; index++) {
-			while (regexCollection['className'].test(currentElement)
-				|| regexCollection['id'].test(currentElement)) {
-				for (var key in regexCollection) {
-					if (regexCollection[key].test(currentElement)) {
-						var keyword = regexCollection[key].exec(currentElement);
-						var keywordLocation = keyword.index;
-
-						result += UTIL.createCodeElement('keyword',
-							currentElement.substring(0, keywordLocation));
-						result += UTIL.createCodeElement(key, keyword[0]);
-						currentElement = currentElement.substring(keywordLocation
-							+ keyword[0].length, currentElement.length);
-					}
-				}
-
+		//TODO: Refactor
+		while (regexCollection['className'].test(currentElement)
+			|| regexCollection['id'].test(currentElement)) {
+			if (getKeywordIndex('className', currentElement) > getKeywordIndex('id', currentElement)) {
+				highlightWord('id', regexCollection['id']);
+				highlightWord('className', regexCollection['className']);
+			} else {
+				highlightWord('className', regexCollection['className']);
+				highlightWord('id', regexCollection['id']);
 			}
+
 		}
 
+
 		result += UTIL.createCodeElement('keyword', currentElement);
-
-
 		result += UTIL.createCodeElement('plain', currentLineContents.substring(firstSpace, currentLineContents.length));
 
 		return {
 			'processedLine': result,
 			'newLocation': currentLocation
 		};
+
+		function getKeywordIndex(key, element) {
+			if (regexCollection[key].exec(element) == null) {
+				return 0;
+			}
+
+			return regexCollection[key].exec(element).index;
+		}
+
+		function highlightWord(key, regex) {
+
+			if (regex.exec(currentElement) == null) {
+				return ;
+			}
+			var keyword = regex.exec(currentElement);
+			var keywordLocation = keyword.index;
+
+			result += UTIL.createCodeElement('keyword',
+				currentElement.substring(0, keywordLocation));
+			result += UTIL.createCodeElement(key, keyword[0]);
+
+			currentElement = currentElement.substring(keywordLocation
+				+ keyword[0].length, currentElement.length);
+		}
 	};
 
 	return jadeHighlighter;
