@@ -3,17 +3,17 @@ import os, os.path, shutil
 YUI_COMPRESSOR = 'yuicompressor-2.4.7.jar';
 
 SCRIPTS = [
-	'../src/modules/editor.js',
-	'../src/modules/events.js',
+	'../src/modules/wrapperStart.js',
 	'../src/modules/util.js',
 	'../src/modules/jade_processor.js',
-	'../src/modules/html_processor.js',
-	'../src/modules/processor.js',
-	'../src/modules/jade_highlighter.js',
-	'../src/modules/html_highlighter.js',
-	'../src/modules/highlighter.js',
-	'../src/modules/keystroke_handler.js',
+    '../src/modules/html_processor.js',
+    '../src/modules/processor.js',
+    '../src/modules/jade_highlighter.js',
+    '../src/modules/html_highlighter.js',
+    '../src/modules/highlighter.js',
+	'../src/modules/editor.js',
 	'../src/jadedit.js',
+	'../src/modules/wrapperEnd.js'
     ]
 
 SCRIPTS_OUT_DEBUG = '../build/jadedit.js'

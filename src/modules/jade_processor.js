@@ -1,6 +1,8 @@
 /* JadEdit - An embeddable JavaScript editor using Jade template syntax.
  * ===================================================================== */
 
+
+
 var JADE_PROCESSOR = (function(UTIL) {
 	var jadeProcessor = {};
 

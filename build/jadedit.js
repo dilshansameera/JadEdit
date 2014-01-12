@@ -1,70 +1,11 @@
 /* JadEdit - An embeddable JavaScript editor using Jade template syntax.
  * ===================================================================== */
 
-var EDITOR = (function () {
-	var editor = {};
+// This wraps the whole app in a closure which loads jQuery dynamically if one does not exist
+// DO NOT MODIFY
+(function(){function a(c,d){if(!window.jQuery){var b=document.createElement("script");b.type="text/javascript";if(b.readyState){b.onreadystatechange=function(){if(b.readyState=="loaded"||b.readyState=="complete"){b.onreadystatechange=null;d()}}}else{b.onload=function(){d()}}b.src=c;document.getElementsByTagName("head")[0].appendChild(b)}else{d()}}a("https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js",function(){
 
-	// Returns a string value representing the editor template
-	// =======================================================
 
-	editor.getEditorTemplate = function (inputName) {
-		return "<div id='jadedit-container'>" +
-			"<div id='jadedit-button-controls'>" +
-				"<div id='jadedit-editor-button' class='chosen'>Editor</div>" +
-				"<div id='jadedit-source-button'>Source</div>" +
-				"<div id='jadedit-preview-button'>Preview</div>" +
-			"</div>" +
-			"<div id='jadedit-editor-container'>" +
-				"<textarea id='jadedit-editor' spellcheck='false'></textarea>" +
-				"<div id='jadedit-source' style='display: none;'></div>" +
-				"<div id='jadedit-preview' style='display: none;'></div>" +
-				"<input type='hidden' id='jadedit-hidden' name='" + inputName + "' />" +
-			"</div>" +
-		"</div>";
-	}
-
-	return editor;
-}());
-/* JadEdit - An embeddable JavaScript editor using Jade template syntax.
- * ===================================================================== */
-
-var EVENTS = (function() {
-	var events = {};
-
-	// Registers the global editor events
-	// ==================================
-
-	events.registerEditorEvents = function(editorElements) {
-		editorElements.editorButton.onclick = function () {
-			editorElements.preview.style.display = 'none';
-			editorElements.editor.style.display = 'block';
-			editorElements.source.style.display = 'none';
-			editorElements.editorButton.className = "chosen";
-			editorElements.previewButton.className = "";
-			editorElements.sourceButton.className = "";
-		}
-
-		editorElements.previewButton.onclick = function () {
-			editorElements.preview.style.display = 'block';
-			editorElements.editor.style.display = 'none';
-			editorElements.source.style.display = 'none';
-			editorElements.previewButton.className = "chosen";
-			editorElements.editorButton.className = "";
-			editorElements.sourceButton.className = "";
-		}
-
-		editorElements.sourceButton.onclick = function() {
-			editorElements.preview.style.display = 'none';
-			editorElements.editor.style.display = 'none';
-			editorElements.source.style.display = 'block';
-			editorElements.previewButton.className = "";
-			editorElements.editorButton.className = "";
-			editorElements.sourceButton.className = "chosen";
-		}
-	}
-
-	return events;
-}());
 /* JadEdit - An embeddable JavaScript editor using Jade template syntax.
  * ===================================================================== */
 
@@ -89,10 +30,29 @@ var UTIL = (function() {
 		return str.replace(/^( |\t)+/, '');
 	}
 
+	// Creates Code Elements that wraps each syntax highlighted components
+	// ===================================================================
+
+	utilities.createCodeElement = function(className, innerText) {
+		var codeElement = document.createElement('code');
+		codeElement.setAttribute('class', className);
+
+		// FireFox does not support InnerText
+		if (codeElement.innerText == undefined) {
+			codeElement.textContent = innerText;
+		} else {
+			codeElement.innerText = innerText;
+		}
+
+		return codeElement.outerHTML;
+	}
+
 	return utilities;
 }());
 /* JadEdit - An embeddable JavaScript editor using Jade template syntax.
  * ===================================================================== */
+
+
 
 var JADE_PROCESSOR = (function(UTIL) {
 	var jadeProcessor = {};
@@ -217,6 +177,8 @@ var JADE_PROCESSOR = (function(UTIL) {
 /* JadEdit - An embeddable JavaScript editor using Jade template syntax.
  * ===================================================================== */
 
+
+
 var HTML_PROCESSOR = (function(UTIL) {
 	var htmlProcessor = {};
 
@@ -270,11 +232,40 @@ var PROCESSOR = (function() {
 /* JadEdit - An embeddable JavaScript editor using Jade template syntax.
  * ===================================================================== */
 
-var JADE_HIGHLIGHTER = (function(UTIL) {
+
+
+var JADE_HIGHLIGHTER = (function (UTIL) {
 	var jadeHighlighter = {};
 
-	jadeHighlighter.highlight = function() {
-		return "";
+	jadeHighlighter.highlight = function (currentLocation, splitedByLine) {
+		var currentLineContents = splitedByLine[currentLocation];
+		if (currentLineContents.length > 1 && currentLocation == splitedByLine.length) {
+			return {
+				'processedLine': "",
+				'newLocation': currentLocation
+			}
+		}
+
+		var result = "";
+		var currentInnerContents = "";
+
+		var firstSpace = currentLineContents.indexOf(' ');
+		if (firstSpace == -1) firstSpace = currentLineContents.length;
+
+		var currentElement = currentLineContents.substring(0, firstSpace + 1);
+		if (currentLocation != 0) {
+			result += '<br/>';
+		}
+
+		result += UTIL.createCodeElement('keyword', currentElement);
+		result += currentLineContents.substring(firstSpace + 1, currentLineContents.length);
+		//result += UTIL.createCodeElement('plain', currentLineContents);
+
+
+		return {
+			'processedLine': result,
+			'newLocation': currentLocation
+		};
 	};
 
 	return jadeHighlighter;
@@ -308,7 +299,7 @@ var HTML_HIGHLIGHTER = (function (UTIL) {
 				// Checks if there is anything comes before finding a html tag, and highlight it as a plain text.
 				var nonTag = currentLine.substring(0, currentLine.indexOf(tagsFound[index]));
 				if (nonTag.length > 0) {
-					nonTag = createCodeElement('plain', nonTag);
+					nonTag = UTIL.createCodeElement('plain', nonTag);
 				}
 				result += nonTag;
 
@@ -323,21 +314,21 @@ var HTML_HIGHLIGHTER = (function (UTIL) {
 							var keywordLocation = keyword.index;
 
 							if (currentTagFound.substring(0, keywordLocation) != '=') {
-								result += createCodeElement('keyword',
+								result += UTIL.createCodeElement('keyword',
 									currentTagFound.substring(0, keywordLocation));
 							} else {
-								result += createCodeElement('plain',
+								result += UTIL.createCodeElement('plain',
 									currentTagFound.substring(0, keywordLocation));
 							}
 
-							result += createCodeElement(key, keyword[0]);
+							result += UTIL.createCodeElement(key, keyword[0]);
 							currentTagFound = currentTagFound.substring(keywordLocation
 								+ keyword[0].length, currentTagFound.length);
 						}
 					}
 				}
 
-				result += createCodeElement('keyword', currentTagFound);
+				result += UTIL.createCodeElement('keyword', currentTagFound);
 
 				// Set the current line as remaining texts that comes after the first keyword found
 				currentLine = currentLine.substring(currentLine.indexOf(tagsFound[index]) +
@@ -346,34 +337,17 @@ var HTML_HIGHLIGHTER = (function (UTIL) {
 
 			// Handles lines that does not have a closing tag in the same line
 			if (currentLine.length != 0) {
-				result += createCodeElement('plain', currentLine);
+				result += UTIL.createCodeElement('plain', currentLine);
 			}
 			// Handles lines that does not have any html tags
 		} else {
-			result += createCodeElement('plain', currentLine);
+			result += UTIL.createCodeElement('plain', currentLine);
 		}
 
 		return {
 			'processedLine': result + '\n',
 			'newLocation': currentLocation
 		};
-
-		// Creates Code Elements that wraps each syntax highlighted components
-		// ===================================================================
-
-		function createCodeElement(className, innerText) {
-			var codeElement = document.createElement('code');
-			codeElement.setAttribute('class', className);
-
-			// FireFox does not support InnerText
-			if (codeElement.innerText == undefined) {
-				codeElement.textContent = innerText;
-			} else {
-				codeElement.innerText = innerText;
-			}
-
-			return codeElement.outerHTML;
-		}
 	};
 
 	return htmlHighlighter;
@@ -396,7 +370,7 @@ var HIGHLIGHTER = (function() {
 	// Sets the current highlighter
 	// ============================
 
-	highlighter.setCurrentProcessor = function(highlightType) {
+	highlighter.setCurrentHighlighter = function(highlightType) {
 		if (highlightType === 'html') {
 			currentHighlighter =  highlighter.html;
 		} else if (highlightType === 'jade') {
@@ -419,52 +393,142 @@ var HIGHLIGHTER = (function() {
 	}
 
 	return highlighter;
-
 }());
 /* JadEdit - An embeddable JavaScript editor using Jade template syntax.
  * ===================================================================== */
 
-var KEYSTROKE_HANDLER = (function (PROCESSOR, HIGHLIGHTER) {
-	var keystrokeHandler = {};
 
-	// Enables tab key functionality in the editor
-	// ==========================================
+var EDITOR = (function (PROCESSOR, HIGHLIGHTER) {
+	var editor = {};
 
-	keystrokeHandler.enableTab = function (editorElements) {
-		editorElements.editor.onkeydown = function (e) {
-			if (e.keyCode === 9) {
-				var val = this.value,
-					start = this.selectionStart,
-					end = this.selectionEnd;
+	// Returns a string value representing the editor template
+	// =======================================================
 
-				this.value = val.substring(0, start) + '\t' + val.substring(end);
-				this.selectionStart = this.selectionEnd = start + 1;
-				return false;
-			}
-		};
+	editor.getEditorTemplate = function (inputName) {
+		return "<div id='jadedit-container'>" +
+			"<div id='jadedit-button-controls'>" +
+			"<div id='jadedit-editor-button' class='chosen'>Editor</div>" +
+			"<div id='jadedit-source-button'>Source</div>" +
+			"<div id='jadedit-preview-button'>Preview</div>" +
+			"</div>" +
+			"<div id='jadedit-editor-container'>" +
+			"<div id='jadedit-editor-view'>" +
+			"<div id='jadedit-highlight-overlay'><span spellcheck='false'></span></div>" +
+			"<div id='jadedit-caret-overlay'><span spellcheck='false'></span></div>" +
+			"<div id='jadedit-caret'></div>" +
+			"<textarea id='jadedit-editor' spellcheck='false'></textarea>" +
+			"</div>" +
+			"<div id='jadedit-source-view' style='display: none;'></div>" +
+			"<div id='jadedit-preview-view' style='display: none;'></div>" +
+			"<input type='hidden' id='jadedit-hidden' name='" + inputName + "' />" +
+			"</div>" +
+			"</div>";
 	}
 
-	// Sets the type of process to use on key up event in the editor
-	// ============================================================
+	editor.registerEditorEvents = function (editorElements) {
+		editorElements.$editorButton.click(function () {
+			editorElements.$previewView.hide();
+			editorElements.$editorView.show();
+			editorElements.$sourceView.hide();
+			editorElements.$editorButton.addClass('chosen');
+			editorElements.$previewButton.removeClass('chosen');
+			editorElements.$sourceButton.removeClass('chosen');
+		});
 
-	keystrokeHandler.enablePreview = function (editorElements) {
-		editorElements.editor.onkeyup = function () {
-			var result = PROCESSOR.process(editorElements.editor.value);
+		editorElements.$previewButton.click(function () {
+			editorElements.$previewView.show();
+			editorElements.$editorView.hide();
+			editorElements.$sourceView.hide();
+			editorElements.$editorButton.removeClass('chosen');
+			editorElements.$previewButton.addClass('chosen');
+			editorElements.$sourceButton.removeClass('chosen');
 
-			HIGHLIGHTER.setCurrentProcessor('html');
+			PROCESSOR.setCurrentProcessor('jade');
+			var result = PROCESSOR.process(editorElements.$editor.val());
+			editorElements.$previewView.html(result);
+		});
 
+		editorElements.$sourceButton.click(function () {
+			editorElements.$previewView.hide();
+			editorElements.$editorView.hide();
+			editorElements.$sourceView.show();
+			editorElements.$editorButton.removeClass('chosen');
+			editorElements.$previewButton.removeClass('chosen');
+			editorElements.$sourceButton.addClass('chosen');
 
+			HIGHLIGHTER.setCurrentHighlighter('html');
+			PROCESSOR.setCurrentProcessor('jade');
+			var result = PROCESSOR.process(editorElements.$editor.val());
+			editorElements.$sourceView.html(HIGHLIGHTER.highlight(result));
+		});
+	}
 
-				//editorElements.source.innerHTML = HIGHLIGHTER.highlight(result);
-			editorElements.source.innerHTML =HIGHLIGHTER.highlight(result);
+	editor.registerCaretEvents = function (editorElements) {
+		var timer = 0;
+		editorElements.$editor
+			.on("input keydown keyup propertychange click paste cut copy mousedown mouseup change",
+			function () {
+				clearTimeout(timer);
+				timer = setTimeout(update, 10);
+			});
 
+		function update() {
+			HIGHLIGHTER.setCurrentHighlighter('jade');
+			editorElements.highlightOverlay.innerHTML = HIGHLIGHTER.highlight(editorElements.$editor.val());
+			editorElements.caretOverlay.innerHTML =
+				editorElements
+					.$editor.val()
+					.substring(0, getCaretPosition(editorElements.$editor[0]))
+					.replace(/\n$/, '\n\u0001');
 
-			editorElements.hidden.value = result;
-			editorElements.preview.innerHTML = result;
+			setCaretXY(editorElements.caretOverlay, editorElements.$editor[0],
+				editorElements.$caret[0], getPos(editorElements.$editor));
+
+			editorElements.$caret.fadeIn(500).fadeOut(500).fadeIn(500);
+			setInterval(function () {
+				editorElements.$caret.fadeIn(500).fadeOut(500).fadeIn(500);
+			}, 3000);
+		}
+
+		function getCaretPosition(el) {
+			if (el.selectionStart) return el.selectionStart;
+			else if (document.selection) {
+				var r = document.selection.createRange();
+				if (r == null) return 0;
+
+				var re = el.createTextRange(), rc = re.duplicate();
+				re.moveToBookmark(r.getBookmark());
+				rc.setEndPoint('EndToStart', re);
+
+				return rc.text.length;
+			}
+			return 0;
+		}
+
+		function setCaretXY(elem, real_element, caret, offset) {
+			var rects = elem.getClientRects();
+			var lastRect = rects[rects.length - 1];
+
+			var x = lastRect.left + lastRect.width - offset[0] + document.documentElement.scrollLeft,
+				y = lastRect.top - real_element.scrollTop - offset[1] + document.documentElement.scrollTop;
+
+			caret.style.cssText = "top: " + y + "px; left: " + x + "px";
+		}
+
+		function getPos(element) {
+			e = element[0];
+			var x = 0;
+			var y = 0;
+			while (e.offsetParent !== null) {
+				x += e.offsetLeft;
+				y += e.offsetTop;
+				e = e.offsetParent;
+			}
+			return [x, y];
 		}
 	}
 
-	return keystrokeHandler;
+	return editor;
 }(PROCESSOR, HIGHLIGHTER));
 /* JadEdit - An embeddable JavaScript editor using Jade template syntax.
  * ===================================================================== */
@@ -472,34 +536,34 @@ var KEYSTROKE_HANDLER = (function (PROCESSOR, HIGHLIGHTER) {
 // The staring point of the applications. Initializes the components
 // =================================================================
 
-(function Main(EDITOR, EVENTS, KEYSTROKE_HANDLER, PROCESSOR) {
-	var editorContainer = document.getElementById('jadedit');
-	if (editorContainer.length) {
-		document.write('Editor Container is not found.');
-		return;
+(function Main(EDITOR) {
+	var $placeHolder = $("#jadedit");
+	if (!$placeHolder.length && !$placeHolder.attr('name').length) {
+		document.write('invalid config');
 	}
 
-	if (!editorContainer.hasAttribute('name')) {
-		document.write('Editor does not have a name.');
-		return;
-	}
-
-	editorContainer.innerHTML = EDITOR.getEditorTemplate(editorContainer.getAttribute('name'));
+	$placeHolder.html(EDITOR.getEditorTemplate($placeHolder.attr('name')));
 
 	var editorElements = {
-		editorButton: document.getElementById('jadedit-editor-button'),
-		previewButton: document.getElementById('jadedit-preview-button'),
-		sourceButton: document.getElementById('jadedit-source-button'),
-		editor:  document.getElementById('jadedit-editor'),
-		source: document.getElementById('jadedit-source'),
-		preview: document.getElementById('jadedit-preview'),
-		hidden:  document.getElementById('jadedit-hidden')
+		$editorButton: $("#jadedit-editor-button"),
+		$previewButton: $('#jadedit-preview-button'),
+		$sourceButton: $('#jadedit-source-button'),
+		$editorView: $('#jadedit-editor-view'),
+		$editor: $('#jadedit-editor'),
+		highlightOverlay: $('#jadedit-highlight-overlay')[0].firstChild,
+		caretOverlay:  $('#jadedit-caret-overlay')[0].firstChild,
+		$caret: $('#jadedit-caret'),
+		$sourceView: $('#jadedit-source-view'),
+		$previewView: $('#jadedit-preview-view'),
+		$hidden: $('#jadedit-hidden')
 	};
 
-	EVENTS.registerEditorEvents(editorElements);
-	KEYSTROKE_HANDLER.enableTab(editorElements);
+	EDITOR.registerCaretEvents(editorElements);
+	EDITOR.registerEditorEvents(editorElements);
+}(EDITOR));
+/* JadEdit - An embeddable JavaScript editor using Jade template syntax.
+ * ===================================================================== */
 
-	PROCESSOR.setCurrentProcessor('jade');
-	KEYSTROKE_HANDLER.enablePreview(editorElements);
-
-}(EDITOR, EVENTS, KEYSTROKE_HANDLER, PROCESSOR));
+// This closes the opening closure which dynamically loads the jQuery library if does not exist.
+// Do not modify
+});})();

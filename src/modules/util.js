@@ -22,5 +22,22 @@ var UTIL = (function() {
 		return str.replace(/^( |\t)+/, '');
 	}
 
+	// Creates Code Elements that wraps each syntax highlighted components
+	// ===================================================================
+
+	utilities.createCodeElement = function(className, innerText) {
+		var codeElement = document.createElement('code');
+		codeElement.setAttribute('class', className);
+
+		// FireFox does not support InnerText
+		if (codeElement.innerText == undefined) {
+			codeElement.textContent = innerText;
+		} else {
+			codeElement.innerText = innerText;
+		}
+
+		return codeElement.outerHTML;
+	}
+
 	return utilities;
 }());

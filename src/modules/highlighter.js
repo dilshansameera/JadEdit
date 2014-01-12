@@ -15,7 +15,7 @@ var HIGHLIGHTER = (function() {
 	// Sets the current highlighter
 	// ============================
 
-	highlighter.setCurrentProcessor = function(highlightType) {
+	highlighter.setCurrentHighlighter = function(highlightType) {
 		if (highlightType === 'html') {
 			currentHighlighter =  highlighter.html;
 		} else if (highlightType === 'jade') {
@@ -38,5 +38,4 @@ var HIGHLIGHTER = (function() {
 	}
 
 	return highlighter;
-
 }());

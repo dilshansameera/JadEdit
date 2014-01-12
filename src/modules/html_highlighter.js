@@ -26,7 +26,7 @@ var HTML_HIGHLIGHTER = (function (UTIL) {
 				// Checks if there is anything comes before finding a html tag, and highlight it as a plain text.
 				var nonTag = currentLine.substring(0, currentLine.indexOf(tagsFound[index]));
 				if (nonTag.length > 0) {
-					nonTag = createCodeElement('plain', nonTag);
+					nonTag = UTIL.createCodeElement('plain', nonTag);
 				}
 				result += nonTag;
 
@@ -41,21 +41,21 @@ var HTML_HIGHLIGHTER = (function (UTIL) {
 							var keywordLocation = keyword.index;
 
 							if (currentTagFound.substring(0, keywordLocation) != '=') {
-								result += createCodeElement('keyword',
+								result += UTIL.createCodeElement('keyword',
 									currentTagFound.substring(0, keywordLocation));
 							} else {
-								result += createCodeElement('plain',
+								result += UTIL.createCodeElement('plain',
 									currentTagFound.substring(0, keywordLocation));
 							}
 
-							result += createCodeElement(key, keyword[0]);
+							result += UTIL.createCodeElement(key, keyword[0]);
 							currentTagFound = currentTagFound.substring(keywordLocation
 								+ keyword[0].length, currentTagFound.length);
 						}
 					}
 				}
 
-				result += createCodeElement('keyword', currentTagFound);
+				result += UTIL.createCodeElement('keyword', currentTagFound);
 
 				// Set the current line as remaining texts that comes after the first keyword found
 				currentLine = currentLine.substring(currentLine.indexOf(tagsFound[index]) +
@@ -64,34 +64,17 @@ var HTML_HIGHLIGHTER = (function (UTIL) {
 
 			// Handles lines that does not have a closing tag in the same line
 			if (currentLine.length != 0) {
-				result += createCodeElement('plain', currentLine);
+				result += UTIL.createCodeElement('plain', currentLine);
 			}
 			// Handles lines that does not have any html tags
 		} else {
-			result += createCodeElement('plain', currentLine);
+			result += UTIL.createCodeElement('plain', currentLine);
 		}
 
 		return {
 			'processedLine': result + '\n',
 			'newLocation': currentLocation
 		};
-
-		// Creates Code Elements that wraps each syntax highlighted components
-		// ===================================================================
-
-		function createCodeElement(className, innerText) {
-			var codeElement = document.createElement('code');
-			codeElement.setAttribute('class', className);
-
-			// FireFox does not support InnerText
-			if (codeElement.innerText == undefined) {
-				codeElement.textContent = innerText;
-			} else {
-				codeElement.innerText = innerText;
-			}
-
-			return codeElement.outerHTML;
-		}
 	};
 
 	return htmlHighlighter;

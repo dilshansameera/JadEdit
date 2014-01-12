@@ -4,34 +4,28 @@
 // The staring point of the applications. Initializes the components
 // =================================================================
 
-(function Main(EDITOR, EVENTS, KEYSTROKE_HANDLER, PROCESSOR) {
-	var editorContainer = document.getElementById('jadedit');
-	if (editorContainer.length) {
-		document.write('Editor Container is not found.');
-		return;
+(function Main(EDITOR) {
+	var $placeHolder = $("#jadedit");
+	if (!$placeHolder.length && !$placeHolder.attr('name').length) {
+		document.write('invalid config');
 	}
 
-	if (!editorContainer.hasAttribute('name')) {
-		document.write('Editor does not have a name.');
-		return;
-	}
-
-	editorContainer.innerHTML = EDITOR.getEditorTemplate(editorContainer.getAttribute('name'));
+	$placeHolder.html(EDITOR.getEditorTemplate($placeHolder.attr('name')));
 
 	var editorElements = {
-		editorButton: document.getElementById('jadedit-editor-button'),
-		previewButton: document.getElementById('jadedit-preview-button'),
-		sourceButton: document.getElementById('jadedit-source-button'),
-		editor:  document.getElementById('jadedit-editor'),
-		source: document.getElementById('jadedit-source'),
-		preview: document.getElementById('jadedit-preview'),
-		hidden:  document.getElementById('jadedit-hidden')
+		$editorButton: $("#jadedit-editor-button"),
+		$previewButton: $('#jadedit-preview-button'),
+		$sourceButton: $('#jadedit-source-button'),
+		$editorView: $('#jadedit-editor-view'),
+		$editor: $('#jadedit-editor'),
+		highlightOverlay: $('#jadedit-highlight-overlay')[0].firstChild,
+		caretOverlay:  $('#jadedit-caret-overlay')[0].firstChild,
+		$caret: $('#jadedit-caret'),
+		$sourceView: $('#jadedit-source-view'),
+		$previewView: $('#jadedit-preview-view'),
+		$hidden: $('#jadedit-hidden')
 	};
 
-	EVENTS.registerEditorEvents(editorElements);
-	KEYSTROKE_HANDLER.enableTab(editorElements);
-
-	PROCESSOR.setCurrentProcessor('jade');
-	KEYSTROKE_HANDLER.enablePreview(editorElements);
-
-}(EDITOR, EVENTS, KEYSTROKE_HANDLER, PROCESSOR));
+	EDITOR.registerCaretEvents(editorElements);
+	EDITOR.registerEditorEvents(editorElements);
+}(EDITOR));
