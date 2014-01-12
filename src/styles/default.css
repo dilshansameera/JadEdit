@@ -116,3 +116,13 @@
 	color: #5ce638 !important;
 	font-family: consolas !important;
 }
+
+#jadedit-container #jadedit-editor-container code.id {
+	color: yellow !important;
+	font-family: consolas !important;
+}
+
+#jadedit-container #jadedit-editor-container code.className {
+	color: orange !important;
+	font-family: consolas !important;
+}

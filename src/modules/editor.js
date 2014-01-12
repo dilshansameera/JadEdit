@@ -69,6 +69,7 @@ var EDITOR = (function (PROCESSOR, HIGHLIGHTER) {
 
 	editor.registerCaretEvents = function (editorElements) {
 		var timer = 0;
+		var cursor = 0;
 		editorElements.$editor
 			.on("input keydown keyup propertychange click paste cut copy mousedown mouseup change",
 			function () {
@@ -101,7 +102,7 @@ var EDITOR = (function (PROCESSOR, HIGHLIGHTER) {
 				editorElements.$caret[0], getPos(editorElements.$editor));
 
 			editorElements.$caret.fadeIn(500).fadeOut(500).fadeIn(500);
-			setInterval(function () {
+			cursor = setInterval(function () {
 				editorElements.$caret.fadeIn(500).fadeOut(500).fadeIn(500);
 			}, 3000);
 		}
