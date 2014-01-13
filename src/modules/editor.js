@@ -29,6 +29,9 @@ var EDITOR = (function (PROCESSOR, HIGHLIGHTER) {
 			"</div>";
 	}
 
+	// Registers different events on the editor
+	// ========================================
+
 	editor.registerEditorEvents = function (editorElements) {
 		editorElements.$editorButton.click(function () {
 			editorElements.$previewView.hide();
@@ -61,15 +64,14 @@ var EDITOR = (function (PROCESSOR, HIGHLIGHTER) {
 			editorElements.$sourceButton.addClass('chosen');
 
 			HIGHLIGHTER.setCurrentHighlighter('html');
-			PROCESSOR.setCurrentProcessor('jade');
-			var result = PROCESSOR.process(editorElements.$editor.val());
-			editorElements.$sourceView.html(HIGHLIGHTER.highlight(result));
+			editorElements.$sourceView.html(HIGHLIGHTER.highlight(editorElements.$hidden.val()));
 		});
 	}
 
 	editor.registerCaretEvents = function (editorElements) {
 		var timer = 0;
 		var cursor = 0;
+
 		editorElements.$editor
 			.on("input keydown keyup propertychange click paste cut copy mousedown mouseup change",
 			function () {
@@ -78,6 +80,7 @@ var EDITOR = (function (PROCESSOR, HIGHLIGHTER) {
 			});
 
 		editorElements.$editor.keydown(function(e) {
+			// Handling tab keys
 			if (e.keyCode === 9) {
 				var val = this.value,
 					start = this.selectionStart,
@@ -89,9 +92,21 @@ var EDITOR = (function (PROCESSOR, HIGHLIGHTER) {
 			}
 		});
 
+		// Things need to happen when there is a focus to the editor
+		// =========================================================
+
 		function update() {
+
+			// CaretOverlay is an overlay on top of the textarea used to calculate caret location
+			// highlightOverlay is an overlay on top of the textarea used to display syntax highlighted code
+
+			var editorContent = editorElements.$editor.val()
+
 			HIGHLIGHTER.setCurrentHighlighter('jade');
-			editorElements.highlightOverlay.innerHTML = HIGHLIGHTER.highlight(editorElements.$editor.val());
+
+			// Displaying highlighted code
+			editorElements.highlightOverlay.innerHTML = HIGHLIGHTER.highlight(editorContent);
+			// Generating overlay for caret location calculation
 			editorElements.caretOverlay.innerHTML =
 				editorElements
 					.$editor.val()
@@ -101,11 +116,18 @@ var EDITOR = (function (PROCESSOR, HIGHLIGHTER) {
 			setCaretXY(editorElements.caretOverlay, editorElements.$editor[0],
 				editorElements.$caret[0], getPos(editorElements.$editor));
 
+			PROCESSOR.setCurrentProcessor('jade');
+			editorElements.$hidden.val(PROCESSOR.process(editorContent));
+
+			// Makes caret blink as if it's a real cursor
 			editorElements.$caret.fadeIn(500).fadeOut(500).fadeIn(500);
 			cursor = setInterval(function () {
 				editorElements.$caret.fadeIn(500).fadeOut(500).fadeIn(500);
 			}, 3000);
 		}
+
+		// Gets the position of the caret
+		// ==============================
 
 		function getCaretPosition(el) {
 			if (el.selectionStart) return el.selectionStart;
@@ -122,6 +144,9 @@ var EDITOR = (function (PROCESSOR, HIGHLIGHTER) {
 			return 0;
 		}
 
+		// Sets the position of the caret
+		// ==============================
+
 		function setCaretXY(elem, real_element, caret, offset) {
 			var rects = elem.getClientRects();
 			var lastRect = rects[rects.length - 1];
@@ -137,6 +162,9 @@ var EDITOR = (function (PROCESSOR, HIGHLIGHTER) {
 
 			caret.style.cssText = "top: " + y + "px; left: " + x + "px";
 		}
+
+		// Gets the relative position of the element
+		// =========================================
 
 		function getPos(element) {
 			var e = element[0];
